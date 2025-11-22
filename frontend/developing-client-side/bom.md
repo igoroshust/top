@@ -1,3 +1,6 @@
+- Комбинированные примеры взаимодействия DOM-элементов: https://www.blackbox.ai/chat/876K65M
+
+
 ## Введение в BOM-элементы и их взаимодействие
 Browser Object Model (BOM) предоставляет объекты для взаимодействия с браузером и его окружением. Основные элементы: `window` (глобальный объект), `navigator` (информация о браузере), `location` (URL и навигация), `history` (история просмотров), `screen` (экран устройства), `geolocation` (геолокация), `localStorage/sessionStorage` (хранение данных). Они позволяют управлять окнами, получать данные о пользователе, навигировать и хранить информацию.
 
@@ -172,4 +175,260 @@ history.pushState(state, title, url);
     </script>
 </body>
 </html>
+```
+
+### Взаимодействие с `screen` (информация об экране)
+`screen` даёт данные о физическом экране устройства пользователя. Он полезен для адаптивного дизайна, аналитики, оптимизации интерфейса и проверки возможностей дисплея. Основные свойства: `width/height` (полные размеры), `availWidth/availHeight` (доступные размеры без панелей), `colorDepth/pixelDepth` (глубина цвета/пикселей). 
+```javascript
+console.log('Ширина:', screen.width, 'Высота:', screen.height);
+console.log('Допустимая ширина:', screen.availWidth, 'Цветовая глубина:', screen.colorDepth);
+```
+Свойства описывают физический экран. Взаимодействие: полезно для адаптивного дизайна.
+
+**Пример-1 (Адаптивная загрузка изображений на основе размера экрана)**
+В реальной практике (например, в новостных сайтах или галереях) `screen` используется для загрузки изображений подходящего разрешения, чтобы сэкономить трафик и улучшить производительность на мобильных устройствах.
+- **Сценарий:** Проверяем ширину экрана и загружаем изображение: маленькое для мобильных, большое для десктопов.
+```javascript
+function loadImageBasedOnScreen(){
+    const img = document.getElementById('mainImage');
+    if (!img) {
+        console.error('Элемент #mainImage не найден!');
+        return;
+    }
+    if (screen.width < 768) {
+        img.src = './img-for-mobile.png'; // Для мобильных
+    } else {
+        img.src = './img-for-desktop.png'; // Для десктопов
+    }
+}
+
+// Современный способ: добавление слушателя события без перезаписи
+document.addEventListener('DOMContentLoaded', loadImageBasedOnScreen);
+```
+**Объяснение:** `screen.width` определяет физический размер экрана (не окна браузера). Это реально используется в lazy loading (например, в библиотеках вроде Responsive Images или на сайтах вроде BBC). Сравните с `window.innerWidth` для точности - `screen` даёт аппаратные данные.
+```javascript
+console.log(screen.width); // 1280
+console.log(window.innerWidth); // 566 (значение зависимо от размера окна)
+```
+
+
+**Пример-2: Проверка поддержки полноэкранного режима и настройка интерфейса**
+В приложениях для просмотра видео (например, YouTube или Netflix) `screen` помогает определить, поддерживает ли устройство полноэкранный режим, и адаптировать UI.
+**Сценарий:** Проверяем доступную высоту экрана и предлагаем полноэкранный режим, если места достаточно.
+```javascript
+function checkFullscreenSupport(){
+    if (screen.availHeight >= 780) {
+        document.getElementById('fullscreenBtn').style.display = 'block';
+        document.getElementById('fullscreenBtn').style.color = 'red';
+    } else {
+        console.log('Полноэкранный режим не рекомендуется')
+    }
+}
+
+document.getElementById('fullscreenBtn').addEventListener('click', () => {
+    document.documentElement.requestFullscreen();
+
+    setTimeout(() => {
+        // Выходим из полноэкранного режима через 3 секунды
+        document.exitFullscreen();
+    }, 3000);
+});
+```
+**Объяснение:** `screen.availHeight` учитывает панели задач (на Windows/Mac). Реально используется в медиа-плеерах для оптимизации UX. Полноэкранный API (`requestFullscreen()`) комбинируется с `screen` для проверки.
+
+**Дополнительно:**
+- `document.documentElement` - свойство объекта `document` (из DOM), которое возвращает корневой элемент HTML-документа. В большинстве случаев это `<html>`. Доступен сразу после загрузки DOM (например, в `DOMContentLoaded`). 
+document.documentElement охватывает весь документ, включая `<head>` и `<body>`.
+
+- `requestFullscreen()` - это метод Fullscreen API (часть BOM и HTML5), который переводит элемент (и его потомков) в полноэкранный режим. Браузер скрывает интерфейс (панели, адресную строку) и растягивает элемент на весь экран.
+`document.exitFullscreen()` - выход из полноэкранного режима
+Связанные события: `fullscreenchange` (при входе/выходе), `fullscreenerror` (ошибка).
+
+
+**Пример-3: Сбор аналитики о устройстве для маркетинга**
+В аналитических инструментах (например, Google Analytics или custom tracking) `screen` собирает данные о дисплее для сегментации пользователей (мобильные vs десктопы).
+**Сценарий:** Отправляем данные о экране в аналитику при загрузке страницы.
+```javascript
+function sendScreenAnalytics(){
+    const screenData = {
+        width: screen.width,
+        height: screen.height,
+        colorDepth: screen.colorDepth,
+        pixelDepth: screen.pixelDepth
+    };
+
+    // Имитация отправки данных с аналитикой (в реальности - fetch или gtag)
+    console.log('Отправка аналитики:', screenData);
+    // Пример: gtag('event', 'screen_info', screenData);
+}
+
+window.addEventListener('load', sendScreenAnalytics);
+```
+**Объяснение:** `colorDepth` (например, 24 бита для true color) помогает понять возможности дисплея. Реально применяется в e-commerce (Amazon) для персонализации - например, показывать HD-изображения только на подходящих экранах.
+
+**Пример-4: Оптимизация игр для графических приложений** 
+В браузерных играх (например, на Canvas или WebGL, как в Phaser.js) `screen` настраивает разрешение для лучшей производительности.
+**Сценарий:** Устанавливаем размер Canvas на основе экрана, чтобы игра выглядела хорошо на разных устройствах.
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d'); // Получаем контекст рисования для элемента
+
+        function resizeCanvas(){
+            canvas.width = Math.min(screen.availWidth, 1920); // Ограничение для производительности
+            canvas.height = Math.min(screen.availHeight, 1080);
+            ctx.fillStyle = 'blue'; // Цвет, градиент или паттерн для заливки фигур
+            ctx.fillRect(0, 0, canvas.width, canvas.height); // Рисуем фон (метод для рисования заполненного прямоугольника: 
+            // x, y - координаты верхнего левого угла прямоугольника (в пикселях), width - ширина прямоугольника, height - высота)
+        }
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+    </script>
+    
+</body>
+</html
+```
+**Объяснение:** `screen.availWidth/Height` предотвращает выход за пределы экрана. Реально используется в играх вроде "2048" или 3D-визуализациях для адаптации под Retina-дисплеи (где pixelDepth > 24).
+
+**Пример-5: Комбинация с другими BOM-элементами для комплексной проверки**
+В PWA (Progressive Web Apps) или responsive design `screen` комбинируется с `navigator` и `window` для полной адаптации.
+**Сценарий: проверяем экран, браузер и ориентацию для показа подходящего контента**
+
+```javascript
+function showContentByDevice(){
+    const isMobile = screen.width < 768 && navigator.userAgent.includes('Mobile');
+    const orientation = screen.height <> screen.width ? 'landscape' : 'portrait'; 
+
+    if (isMobile && orientation === 'portrait') {
+        document.body.classList.add('.mobile-portrait');
+        console.log('Адаптация для мобильных устройств');
+    } else {
+        document.body.classList.add('.desktop');
+        console.log('Адаптация для десктопных устройств');
+    }
+}
+
+window.document.addEventListener('orientationchange', showContentByDevice);
+```
+**Объяснение:** Комбинирует `screen` с `navigator.userAgent` для детекции устройства. Реально применяется в фреймворках вроде Bootstrap для responsive grid. `orientationchange` - BOM-событие для поворота экрана.
+
+**Пример работы программы:**
+![alt text](image-4.png)
+
+
+### Взаимодействие с `localStorage` и `sessionStorage` (хранение данных)
+Эти объекты BOM хранят данные локально (localStorage - постоянно, sessionStorage - до закрытия вкладки).
+```javascript
+// Установка значения
+localStorage.setItem('username', 'John');
+
+// Чтение значения
+console.log(localStorage.getItem('username')); // 'John'
+
+// Удаление значения
+localStorage.removeItem('username');
+
+// Аналогично для sessionStorage
+sessionStorage.setItem('tempData', 'Временные данные');
+console.log(sessionStorage.getItem('tempData'));
+sessionStorage.removeItem('tempData');
+```
+**Объяснение:** Хранение строковых данных. Взаимодействие: Сохраняет состояние между сессиями или страницами.
+
+**Что представляет из себя localStorage на самом деле - объект**
+![alt text](image-5.png)
+
+
+**Пример-2: Сохранение и восстановление формы (с `localStorage`)**
+В формах регистрации/входа нужно сохранять данные, чтобы пользователь не терял ввод при перезагрузке страницы. 
+**Сценарий:** Пользователь заполняет форму; данные сохраняются и восстанавливаются при возврате.
+```javascript
+// Записываем введённые данные в локалсторадж
+document.getElementById('username').addEventListener('input', (e) => {
+    localStorage.setItem('username', e.target.value);
+});
+
+// Запоминаем данные после обновления страницы
+document.addEventListener('DOMContentLoaded', () => {
+    let savedUsername = localStorage.getItem('username')
+    if (savedUsername) {
+        document.getElementById('username').value = savedUsername;
+    }
+});
+
+// Очищаем данные
+document.getElementById('form').addEventListener('submit', () => {
+    localStorage.removeItem('username');
+});
+```
+**Объяснение:** `localStorage` сохраняет навсегда - данные останутся даже после закрытия браузера. Реально используется в Gmail или Amazon для автозаполнения.
+
+**Пример-2: Корзина покупок (c `sessionStorage`)**
+В e-commerce сайтах (интернет-магазинах) храните товары в корзине на время сессии.
+**Сценарий:** Добавление товаров в корзину; отображение количества; очистка при закрытии вкладки.
+```javascript
+// Устанавливаем данные
+sessionStorage.setItem('cart', JSON.stringify([{ id: 1, quantity: 1 }]));
+
+// Описываем логику обработки товаров в корзине (подсчёт количества)
+function addToCart(productId, quantity){
+    const cart = JSON.parse(sessionStorage.getItem('cart' || '[]'));
+    const existing = cart.find(item => item.id === productId);
+    if (existing) {
+        existing.quantity += quantity;
+    } else {
+        cart.push({ id: productId, quantity });
+    }
+    sessionStorage.setItem('cart', JSON.stringify(cart));
+    updateCartDisplay();
+}
+
+// Обновляем количество товаров (если увеличили количество имеющегося)
+function updateCartDisplay(){
+    const cart = JSON.parse(sessionStorage.getItem('cart' || '[]'));
+    document.getElementById('cartCount').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+}
+
+document.addEventListener('DOMContentLoaded', updateCartDisplay);
+
+addToCart(1, 2);
+```
+
+**Комментарии к коду:**
+- Метод `find()` ищет первый элемент в массиве, удовлетворяющий заданному условию, и возвращает этот элемент. Если ни один элемент не подходит - возвращает undefined.
+В коде 
+```javascript
+cart.find(item => item.id === productId);
+```
+1. Метод перебирает элементы массива cart по порядку
+2. Для каждого элемента вызывает функцию-коллбек
+3. Как только находит элемент, для которого функция возвращает true (т.е. item.id совпал с productId), останавливает поиск.
+4. Возвращает этот элемент.
+5. Если совпадений нет - возвращает undefined.
+
+- Метод `reduce()` сводит массив к одному значению, последовательно применяя функцию-аккумулятор.
+```javascript
+array.reduce(callback, initialValue)
+
+(sum, item) => sum + item.quantity // функция-аккумулятор
+
+// sum - "накопитель" (текущее суммарное значение, начинается с initialValue)
+// item - текущий элемент массива cart на данной итерации
+// sum + item.quantity - прибавляет к накопителю количество товаров в текущем элементе
+// 0 - начальное значение накопителя (sum на первой итерации)
+
+// reduce возвращает общую сумму quantity: document.getElementById('cartCount').textContent = 6;
+
 ```
