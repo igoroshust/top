@@ -9,7 +9,20 @@
 </head>
 <body>
 
-    <p id="cartCount"></p>
+    <p id="cart-count"></p>
+
+    <button 
+        type="button" 
+        id="cart-btn" 
+        data-cart-open-content="Посмотреть информацию о товарах"
+        data-cart-close-content="Скрыть сведения о товарах"
+    >Посмотреть информацию о товарах
+    </button>
+
+    <div class="content-info">
+        <ul class="cart-info" style="display: none;">
+        </ul>
+    </div>
     
 </body>
 </html

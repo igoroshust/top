@@ -430,5 +430,43 @@ array.reduce(callback, initialValue)
 // 0 - начальное значение накопителя (sum на первой итерации)
 
 // reduce возвращает общую сумму quantity: document.getElementById('cartCount').textContent = 6;
+```
 
+Дополнительный пример с выводом подробной информации о товарах
+```javascript
+sessionStorage.setItem('cart', JSON.stringify([{ id: 1, quantity: 2 }]));
+
+function addToCart(productId, quantity) {
+    const cart = JSON.parse(sessionStorage.getItem('cart' || '[]'));
+    const existing = cart.find(item => item.id === productId);
+    if (existing) {
+        existing.quantity += quantity;
+    } else {
+        cart.push({ id: productId, quantity: quantity });
+    }
+    sessionStorage.setItem('cart', JSON.stringify(cart));
+    updateToDisplay();
+}
+
+function updateToDisplay() {
+    const cart = JSON.parse(sessionStorage.getItem('cart' || '[]'));
+    document.getElementById('cartCount').textContent = `Количество товаров в корзине: ${cart.reduce((sum, item) => sum + item.quantity, 0)}`;
+}
+
+document.addEventListener('DOMContentLoaded', updateToDisplay);
+
+addToCart(2, 9);
+addToCart(3, 10);
+addToCart(4, 9);
+addToCart(3, 2);
+addToCart(9, 2);
+
+function showCartItems() {
+    const cart = JSON.parse(sessionStorage.getItem('cart' || '[]'));
+    let count = 1;
+    cart.forEach(function(item){
+        console.log(`${count}. ID: ${item.id}, quantity: ${item.quantity}`);
+        count++;
+    });
+}
 ```
