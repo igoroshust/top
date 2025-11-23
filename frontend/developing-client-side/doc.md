@@ -1,5 +1,6 @@
 Темы для разбора:
 - FETCH API
+- Делегирование событий (event delegation)
 - Массивоподобные структуры в JS (HTMLCollection, Node, NodeList и т.д.)
 - Web Storage API
 - Функции-аккумуляторы
