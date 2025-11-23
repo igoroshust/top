@@ -1,0 +1,39 @@
+        /* Общие стили для элементов */
+        .item {
+            width: 150px;
+            height: 100px;
+            background: lightblue;
+            border: 1px solid blue;
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        /* Контейнер 1: без flex-wrap (align-content не работает) */
+        .container1 {
+            display: flex;
+            flex-flow: column wrap;
+
+            justify-content: flex-start;
+            align-items: flex-end;  /* Центрирует элементы вертикально в строке */
+            /* align-content: space-around; /* Не работает, так как нет переноса */
+            height: 1100px;
+            width: 800px;
+            border: 2px solid tomato;
+            margin-bottom: 20px;
+        }
+
+        /* Контейнер 2: с flex-wrap (оба свойства работают) */
+        .container2 {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;  /* Позволяет перенос на новую строку */
+            justify-content: flex-start;
+            align-items: center;  /* Центрирует элементы вертикально в своих строках */
+            align-content: space-around;  /* Распределяет строки с отступами */
+            height: 400px;
+            width: 500px;
+            border: 2px solid green;
+        }

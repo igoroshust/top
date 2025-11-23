@@ -309,7 +309,7 @@ window.addEventListener('load', sendScreenAnalytics);
 ```javascript
 function showContentByDevice(){
     const isMobile = screen.width < 768 && navigator.userAgent.includes('Mobile');
-    const orientation = screen.height <> screen.width ? 'landscape' : 'portrait'; 
+    const orientation = screen.height < screen.width ? 'landscape' : 'portrait'; 
 
     if (isMobile && orientation === 'portrait') {
         document.body.classList.add('.mobile-portrait');
