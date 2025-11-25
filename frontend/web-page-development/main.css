@@ -9,18 +9,34 @@
             align-items: center;
             justify-content: center;
             font-size: 14px;
+
+            flex: 0 0 300px;
         }
+
+        
+        .item-1 {
+            flex-shrink: 2;
+        }
+
+        .item-2 {
+            flex-shrink: 1;
+        }
+
+        .item-3 {
+            flex-shrink: 5;
+        }
+
 
         /* Контейнер 1: без flex-wrap (align-content не работает) */
         .container1 {
             display: flex;
-            flex-flow: column wrap;
+            flex-flow: row nowrap;
 
             justify-content: flex-start;
-            align-items: flex-end;  /* Центрирует элементы вертикально в строке */
-            /* align-content: space-around; /* Не работает, так как нет переноса */
+            align-items: flex-start;  /* Центрирует элементы вертикально в строке */
+            align-content: flex-start; /* Не работает, так как нет переноса */
             height: 1100px;
-            width: 800px;
+            width: 200px;
             border: 2px solid tomato;
             margin-bottom: 20px;
         }

@@ -1,5 +1,6 @@
 Темы для разбора:
 - Фазы распространения события (event propagation)
+- new MouseEvent
 - Конструкция `Array.from(nodeList).map()`
 - FETCH API
 - Делегирование событий (event delegation)
@@ -134,3 +135,32 @@ const jsonParse = JSON.parse(jsonString); // { name: 'Alice', age: 30 }
 - `В <body>`: Стили загружаются позже, что может вызвать задержку отображения. Полезно для критических стилей ниже сгиба.
 - `В отдельном файле`: Лучше для кэширования и разделения. Загружается асинхронно, но может блокировать рендеринг, если не использовать `media="print"` или preload.
 Итог: В head быстрее начальный рендеринг + улучшает Core Web Vitals, отдельный файл - лучше для повторных загрузок (кеш) + упрощает управление. Body - медленнее, но позволяет рендерить контент раньше.
+
+## insertAdjacentHTML, insertAdjacentElement
+Оба метода позволяют вставлять контент в DOM-дерево относительно заданного элемента без полной перестройки его содержимого (в отличие от `innerHTML`).
+- `insertAdjacentHtml(position, htmlString)` вставляет HTML-строку, которую бразуер барсит и преобразует в DOM-узлы.
+- `insertAdjacentElement(position, element)` вставляет готовый DOM-элемент.
+```javascript
+const ul = document.getElementById('ul');
+const li1 = document.createElement('li');
+
+li1.textContent = 'Элемент 1';
+
+const li2 = document.createElement('li');
+li2.textContent = 'Элемент 2';
+
+ul.appendChild(li1);
+ul.appendChild(li2);
+
+// Вставить после h1
+const h1 = document.createElement('h1');
+h1.textContent = 'Heading';
+
+// ul.insertAdjacentElement('beforebegin', h1); // Вставка элемента перед ul (вне структуры ul)
+// ul.insertAdjacentHTML('afterend', '<h1>dsfdsd</h1>'); // Вставка элемента после ul (вне структуры ul)
+
+// ul.insertAdjacentElement('afterbegin', h1); // Вставка элемента в начало (внутри ul)
+// ul.insertAdjacentElement('beforeend', h1); // Вставка элемента в конец (внутри ul)
+
+console.log(ul.children)
+```
