@@ -531,3 +531,161 @@ target.scrollIntoView({
 })
 
 ```
+
+## Модель событий DOM
+Модель событий DOM (Document Object Model Events) – это механизм, позволяющий JS реагировать на действия пользователя или изменения в документе, такие как клики, нажатия клавиш, загрузка страницы и т.д. События представляют собой сигналы, генерируемые браузером при взаимодействии с элементами DOM. Модель событий включает обработчики (listeners), которые выполняют код в ответ на события, и фазы распространения (propagation), определяющие порядок обработки.
+
+DOM Events основаны на стандарте W3C и поддерживаются всеми соверменными браузерами. События могут быть стандратными (click, load) или пользовательскими.
+
+### Основные компоненты модели событий
+- **События (Events)**: Объекты, содержащие информацию о произошедшем. Каждый тип события имеет имя (click, keydown, submit).
+
+- **Обработчики событий (Event Handlers)**: Функции, вызываемые при наступлении события. Можно назначать:
+- - В HTML: `<button onclick="alert('Клик!')" >Text</button>`
+- - В JS: `element.addEventListener('event', function)`
+
+- **Объект Event**: Передаётся в обработчик и содержит свойства, такие как `target` (элемент, вызвавший событие), `type` (тип события), `preventDefault()` (отмена действия по умолчанию), `stopPropagation()` (остановка распространения).
+
+- stopPropagation() - метод, предотвращающий продолжение фазы распространения события. Если событие находится на фазе всплытия (bubbling, по умолчанию), оно не поднимается выше указанного элемента. Если на захвате (capturing), оно не спустится ниже. 
++ Предотвращает срабатывание других обработчиков (если на родительских элементах есть свои слушатели, они не сработают после этого). Это изолирует обработку. 
++ Избегает конфликтов. Если есть глобальный обработчик (например, лог кликов), e.stopProgagation() предотвратит его срабатывание для этого конкретного события
++ Не влияет на preventDefault() - только распространение. Они дополняют друг друга, но работают независимо.
++ В простых случаях (без других слушателей) он не критичен, но добавляет безопасность. Если бы обработчик был на более низком элементе (допустим, на контейнере ссылок), без него событие могло бы всплыть к `document` и вызвать повторную проверку.
+В итоге, stopPropagation() обеспечивает полный контроль над событием, предотвращая "побочные эффекты".
+
+
+
+
+Пример
+```html
+<button type="button" class="btn">Кнопка</button>
+```
+
+```javascript
+const btn = document.querySelector('.btn');
+
+btn.addEventListener('click', (e) => {
+    console.log(e);
+});
+```
+
+Результат:
+
+![alt text](image-8.png)
+
+### Фазы распространения событий
+События распространяются по DOM-дереву в три фазы:
+1. `Capturing (Захват)`: событие спускается от корня (`document`) к целевому элементу. Редко используется, но можно слушать с `addEventListener(..., { capture: true })`.
+2. `Target (Цель)`: событие достигает целевого элемента.
+3. `Bubbling (Всплытие)`: Событие поднимается обратно к корню. По умолчанию обработчики срабатывают на этой фазе.
+
+Это позволяет обрабатывать события на разных уровнях иерархии.
+
+### Примеры
+1. **Назначение обработчика события**
+```javascript
+const btn = document.querySelector('.btn');
+
+btn.addEventListener('click', (e) => {
+    console.log('Кнопка нажата!');
+    console.log('Тип события:', e.type); // "click"
+    console.log('Целевой элемент:', e.target); // <button type="button" class="btn">Кнопка</button>
+
+    console.log('Тип целевого элемента:', e.target.type); // button (по сути, e.target... обращается к атрибутам элемента)
+    console.log('Контент целевого элемента:', e.target.textContent); // Кнопка
+    console.log('Значение целевого элемента:', e.target.value); // если есть атрибут value, покажет значение
+});
+```
+
+2. **Работа с фазами распространения**
+```html
+<div id="parent">
+    <button id="child">Кликни меня</button>
+</div>
+```
+
+```javascript
+const parent = document.getElementById('parent');
+const child = document.getElementById('child');
+
+// Обработчик на всплытии (по умолчанию) (3)
+parent.addEventListener('click', function(){
+  console.log('Всплытие: родитель');
+});
+
+// Обработчик на захвате (1)
+parent.addEventListener('click', function(){
+  console.log('Захват: родитель');
+}, { capture: true });
+
+// Обработчик на ребёнке (2)
+child.addEventListener('click', function(){
+  console.log('Цель: ребёнок');
+});
+// При клике на кнопку: "Захват: родитель" -> "Цель: ребёнок" -> "Всплытие: родитель"
+```
+
+3. **Отмена действия по умолчанию и остановка распространения**
+```javascript
+const link = document.querySelector('a');
+
+// Отмена перехода по ссылке
+link.addEventListener('click', function(event) {
+    event.preventDefault(); // Не переходит по href
+    console.log('Ссылка нажата, но переход отменен');
+});
+
+// Остановка всплытия
+child.addEventListener('click', function(event) {
+    event.stopPropagation(); // Останавливает распространение
+    console.log('Всплытие остановлено');
+});
+```
+
+4. **События клавиатуры и формы**
+```javascript
+const form = document.querySelector('form');
+const btn = document.querySelector('button');
+
+// Обработка ввода с клавиатуры
+document.addEventListener('keydown', function(event){
+  console.log(event); // KeyboardEvent {isTrusted: true, key: 'd', code: 'KeyD', ...}
+  console.log('Нажата клавиша: ', event.key);
+});
+
+// Отмена отправки формы (переопределение стандартного поведения)
+form.addEventListener('submit', function(event){
+  event.preventDefault(); // Отмена отправки
+  console.log(event); // SubmitEvent {isTrusted: true, submitter: button, type: 'submit', ...}
+  console.log('Кнопка отправки нажата, форма не отправлена')
+});
+```
+
+5. **Пользовательское событие**
+```javascript
+const customEvent = new Event('myEvent'); // Кастомное событие
+const btn = document.querySelector('button'); // Существующий элемент
+
+document.addEventListener('myEvent', function(e){
+    console.log(e.type); // myEvent
+    console.log('Пользовательское событие сработало!');
+});
+
+btn.addEventListener('click', function(e){
+    e.preventDefault(); // Отмена отправки формы 
+    console.log(e.type); // click
+});
+
+// Генерация события (кастом)
+document.dispatchEvent(customEvent);
+
+// Генерация события (существующий элемент)
+btn.dispatchEvent(new MouseEvent('click', {
+    bubbles: true,
+    cancelable: true,
+    view: window
+}));
+```
+
+Эти примеры показывают базовую работу с событиями. Для сложных приложений необходимо использовать делегирование событий (назначение на родителя для динамических элементов). Необходимо избегать inline-обработчиков в пользу `addEventListener` для лучшей управляемости.
+
