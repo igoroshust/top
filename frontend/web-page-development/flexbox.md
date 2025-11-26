@@ -171,6 +171,14 @@ align-items влияет на выравнвание элементов внут
 
 ![alt text](image.png)
 
+4. **place-content**
+Сокращённая запись для `justify-content` и `align-content`
+```css
+.block {
+    place-content: space-between center;
+}
+```
+
 
 5. **flex-wrap**
 Определяет, могут ли элементы переноситься на новую строку.
