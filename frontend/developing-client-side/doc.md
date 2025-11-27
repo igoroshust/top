@@ -369,3 +369,192 @@ document.addEventListener('click', (event) => {
 4. **В фреймворках для управления состоянием**
 - Сценарий: в библиотеках вроде React или Vue.js захват может использоваться для глобального управления события (например, в роутерах для перехвата навигации).
 - Пример: в кастомных компонентах для обработки drag-and-drop или touch-событий на высоком уровне
+
+
+
+
+
+## Методы массивов
+
+### findIndex()
+Ищет индекс первого элемента, удовлетворяющего условию. Возвращает индекс найденного элемента (число) или -1, если элемент не найден.
+```javascript
+array.findIndex(callback(element, index, array), thisArg);
+
+/* Параметры callback
+element - текущий элемент
+index - его индекс
+array - исходный массив */
+```
+
+Пример использования
+```javascript
+const users = [
+    {id: 1, name: 'Alice'},
+    {id: 2, name: 'Egor'},
+    {id: 3, name: 'Igor'},
+];
+
+const index = users.findIndex(user => user.id === 2);
+console.log(index); // 1
+```
+Важно: останавливается на первом совпадении, не изменяет исходный массив
+
+### splice()
+Изменяет массив - удаляет, добавляет или заменяет элементы. Возвращает массив удалённых элементов.
+```javascript
+array.splice(start, deleteCount, item1, item2, ...)
+
+/*
+start - индекс начала изменений
+deleteCount - сколько элементов удалить
+item1, item2 - новые элементы для вставки
+*/
+```
+
+Пример использования
+```javascript
+const arr = ['a', 'b', 'c'];
+
+// Удалить 1 элемент с индекса 1
+arr.splice(1, 1); // arr: ['a', 'c']
+
+// Добавить 'x' на индекс 1
+arr.splice(1, 0, 'x'); // arr: ['a', 'x', 'c']
+
+// Заменить 1 элемент на 'y'
+arr.splice(1, 1, 'y')
+
+// Вставить элемент в начало массива
+arr.splice(0, 0, 'x');
+
+// Вставить элемент в конец массива
+arr.splice(arr.length, 0, 'x')
+```
+
+Важно: `splice()` мутирует исходный массив, отрицательные индексы отсчитываются с конца (-1 - последний элемент). Сдвигает массивы элементов при переборе в цикле, вызывая непредсказуемое поведение.
+
+
+### slice()
+Создаёт копию части массива (без изменения оригинала), возвращая новый массив.
+```javascript
+array.slice(start, end);
+
+/*
+start - начальный индекс (по умолчанию 0)
+end - конечный индекс (не включается, по умолчанию - до конца)
+*/
+```
+
+Пример
+```javascript
+const arr = [1, 2, 3, 4, 5];
+
+const sliceResult = arr.slice(-1);
+      
+arr.slice(1, 3); // [2, 3]
+arr.slice(2); // [3, 4, 5] - берёт все, начиная со второго
+arr.slice(-1); // [5] - последний элемент
+
+console.log(sliceResult);
+```
+
+Важно: не мутирует исходный массив, копирует элементы по значению (для объектов - копируется ссылка).
+
+
+### reduce()
+Сводит массив к одному значению (сумма, объект, строка и т.д.), возвращая результат вычислений.
+```javascript
+array.reduce(callback(accumulator, current, index, array), initialValue);
+
+/* Параметры callback
+accumulator - накопитель (результат предыдущих вычислений)
+current - текущий элемент
+index - его index
+array - исходный массив
+initialValue - определяет начальное значение аккумулятора
+*/
+```
+
+Пример-1 (сумма значений)
+```javascript
+const arr = [2, 3, 4]
+
+const sumArr = arr.reduce((acc, num) => acc + num, 0); // 9
+```
+
+Пример-2 (группировка объектов по типу)
+```javascript
+const pets = [
+  { type: 'dog', name: 'Max' },
+  { type: 'cat', name: 'Luna' },
+  { type: 'dog', name: 'Buddy' }
+];
+
+const grouped = pets.reduce((acc, pet) => {
+    acc[pet.type] = acc[pet.type] || [];
+    acc[pet.type].push(pet);
+    return acc;
+}, {});
+
+console.log(grouped);
+```
+Обязательно необходимо указывать initialValue, иначе первая итерация пропустится.
+Подходит для сложных трансформаций (не только чисел)
+
+### map()
+Создаёт новый массив, применяя функцию к каждому элементу. Возвращает новый массив той же длины.
+```
+array.map(callback(element, index, array), thisArg)
+```
+
+Пример-1
+```javascript
+const numbers = [1, 2, 3];
+const doubled = numbers.map(num => num * 2);
+console.log(doubled);
+```
+
+Пример-2 (преобразование объектов)
+```javascript
+const users = [{name:'Alice'}, {name:'Bob'}];
+const names = users.map(user => user.name);
+console.log(names); // ['Alice', 'Bob']
+```
+
++ пример с flatMap() - применяет функцию к каждому элементу и разглаживает результат на 1 уровень
+```javascript
+const users = [{name:'Alice', age: 20}, {name:'Bob', age: 30}];
+
+const result = users.flatMap(user => [user.name, user.age]);
+
+console.log(result); // ["Alice", 20, "Bob", 30]
+```
+
+map() не мутирует исходный массив. Длина нового массива всегда равно исходному.
+
+
+### filter()
+Создаёт новый массив из элементов, удовлетворяющих условию. Возвращает массив отфильтрованных элементов.
+```javascript
+array.filter(callback(element, index, array), thisArg)
+```
+
+Пример-1
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+const events = numbers.filter(num => num % 2 === 0);
+console.log(events); // [2, 4]
+```
+
+Фильтрация по возрасту
+```javascript
+const users = [
+  { name: 'Alice', age: 25 },
+  { name: 'Bob', age: 17 }
+];
+
+const adults = users.filter(user => user.age >= 18);
+console.log(adults); 
+```
+Не мутирует исходный массив. Если ни один элемент не подходит, возвращает пустой массив [].

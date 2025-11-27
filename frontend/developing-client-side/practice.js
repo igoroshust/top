@@ -40,6 +40,30 @@ document.addEventListener('click', (e) => {
     }
 }, { capture: true });
 
+
+4. Группировка элементов с помощью reduce
+const pets = [
+  { type: 'dog', name: 'Max' },
+  { type: 'cat', name: 'Luna' },
+  { type: 'dog', name: 'Buddy' }
+];
+
+const grouped = pets.reduce((acc, pet) => {
+    acc[pet.type] = acc[pet.type] || [];
+    acc[pet.type].push(pet);
+    return acc;
+}, '');
+
+console.log(grouped);
+
+
+4. Пример-2 (преобразование объектов)
+```javascript
+const users = [{name:'Alice'}, {name:'Bob'}];
+const names = users.map(user => user.name);
+console.log(names); // ['Alice', 'Bob']
+```
+
 */
 
 
