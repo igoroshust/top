@@ -63,8 +63,84 @@
         <video width="640" height="360" controls> <!-- controls/autoplay loop бесконечный повтор, controls/autoplay muted - видео загружается без звука -->
             <source src="video.mp4" type="video/mp4">
             <source src="video.webm" type="video/webm">
+
+            <track src="subtitles_ru.vtt" kind="subtitles" srclang="ru" label="Русские субтитры"> <!-- Субтитры -->
+            <track src="subtitles_ru.vtt" kind="subtitles" srclang="en" label="English subtitles">
             Ваш браузер не поддерживает видео.
-        </video>
+        </video><br><br>
+
+        <audio controls>
+            <source src="music.mp3" type="audio/mpeg">
+            <source src="music.ogg" type ="audio/ogg">
+            Ваш браузер не поддерживает аудио.
+        </audio><br><br>
+
+        <!-- svg -->
+        <span>SVG</span><br><br>
+        <svg width="100" height="100" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" fill="blue" />
+            <rect x="10" y="10" width="30" height="30" fill="red" />
+        </svg><br><br>
+
+        <!-- canvas -->
+        <span>canvas</span><br><br>
+        <canvas id="myCanvas" width="400" height="200"></canvas>
+        <script>
+            const canvas = document.getElementById('myCanvas');
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = 'blue';
+            ctx.fillRect(50, 50, 100, 100); // Рисуем синий квадрат
+            ctx.beginPath();
+            ctx.arc(200, 100, 50, 0, 2 * Math.PI); // Круг
+            ctx.fillStyle = 'red';
+            ctx.fill();
+        </script><br><br>
+
+        <iframe src="https://example.com" width="600" height="400"></iframe><br><br>
+
+        <form action="">
+            <label for="country">Выберите страну:</label>
+            <select name="country-select" id="country">
+                <option value="" disabled>Не выбрано</option>
+                <option value="ru" selected>Россия</option>
+                <option value="en">Англия</option>
+                <option value="de">Германия</option>
+            </select>
+        </form><br><br>
+
+        <form action="">
+            <fieldset>
+                <legend>Личные данные</legend>
+                <label for="name">Имя</label>
+                <input type="text" name="name" id="name">
+                <label for="age">Возраст</label>
+                <input type="number" name="age" id="age">
+                <button type="submit">Отправить</button>
+            </fieldset>
+        </form><br><br>
+
+        <form action="">
+            <fieldset>
+                <legend>Форма с подсказками</legend>
+                    <label for="browser">Выбор браузера</label>
+                    <input type="text" name="browser" id="browser" list="browsers">
+                    <datalist id="browsers">
+                        <option value="Chrome">
+                        <option value="Safari">
+                        <option value="Firefox">
+                        <option value="Mozzilla">
+                    </datalist>
+                    <button>Отправить</button>
+            </fieldset>
+        </form><br><br>
+
+
+        <form oninput="result.value = parseInt(a.value) + parseInt(b.value)">
+            <input type="number" name="a" id="a" value="0"> + 
+            <input type="number" name="b" id="b" value="3"> =
+            <output value="result" for="a b">0</output>
+        </form>
 
 
     </main>
