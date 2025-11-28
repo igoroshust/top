@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Страница со структурой HTML5-документа">
+    <meta name="robots" content="index, follow">
+
+    <title>MyPage</title>
+</head>
+
+<body>
+    <header>
+        <h1>Заголовок сайта</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Главная</a></li>
+                <li><a href="#about">О нас</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h2>Основной раздел</h2>
+            <p>Это параграф в основном контенте.</p>
+        </section>
+
+        <article>
+            <h3>Статья</h3>
+            <p>Содержание статьи</p>
+        </article>
+
+
+        <p>Как сказал Эйнштейн: <q>Воображение важнее знаний</q>.</p>
+        <blockquote>Жизнь - это то, что с тобой происходит, пока ты строишь другие планы.</blockquote>
+        <cite>Джон Леннон</cite><br><br>
+
+        <code>const param = JSON.parse(sessionStorage.getItem('cart' || '[]'))</code>
+
+        <mark>Выделенный текст с помощью тега mark</mark><br><br>
+
+        <small>Мелкий текст благодаря тегу small</small><br><br>
+
+        <sub>sub</sub>
+
+        <sup>sup</sup><br><br>
+
+        <del>Удалённый текст с помощью тега <code><mark>del</mark></code></del><br><br>
+
+        <p>Это старый текст. <ins datetime="2025-11-28" cite="https://example.com/">А это вставка.</ins></p><br><br>
+
+        <time datetime="2025-10-01">1 октября 2025 года</time><br><br>
+
+        <dl>
+            <dt>HTML</dt>
+                <dd>Язык разметки для создания веб-страниц</dd>
+            <dt>CSS</dt>
+                <dd>Язык стилей для оформления HTML.</dd>
+                <dd>Позволяет адаптировать дизайн под устройства.</dd> <!-- Несколько dd для одного dt-->
+        </dl><br><br>
+
+        <video width="640" height="360" controls> <!-- controls/autoplay loop бесконечный повтор, controls/autoplay muted - видео загружается без звука -->
+            <source src="video.mp4" type="video/mp4">
+            <source src="video.webm" type="video/webm">
+            Ваш браузер не поддерживает видео.
+        </video>
+
+
+    </main>
+
+    <aside>
+        <h4>Боковая панель</h4>
+        <p>Дополнительная информация</p>
+    </aside>
+
+    <footer>
+        <p>&copy; 2025 Мой сайт</p>
+    </footer>
+
+</body>
+</html>
