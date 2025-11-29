@@ -6,6 +6,8 @@
     <meta name="description" content="Страница со структурой HTML5-документа">
     <meta name="robots" content="index, follow">
 
+    <script defer src="/scripts.js"></script>
+
     <title>MyPage</title>
 </head>
 
@@ -46,11 +48,24 @@
 
         <sup>sup</sup><br><br>
 
+        Преформатированный текст с помощью тега &lt;pre&gt;
+        <pre>
+            function hello() {
+                console.log('Hello!');
+            }
+        </pre><br><br>
+
         <del>Удалённый текст с помощью тега <code><mark>del</mark></code></del><br><br>
 
         <p>Это старый текст. <ins datetime="2025-11-28" cite="https://example.com/">А это вставка.</ins></p><br><br>
 
         <time datetime="2025-10-01">1 октября 2025 года</time><br><br>
+
+        <p>Загрузка файла:</p>
+        <progress value="90" max="100"></progress><br><br>
+
+        <p>Уровень батареи:</p>
+        <meter value="0.2" max="1" min="0" low="0.4" high="0.8" optimum="1">80%</meter>
 
         <dl>
             <dt>HTML</dt>
@@ -139,8 +154,61 @@
         <form oninput="result.value = parseInt(a.value) + parseInt(b.value)">
             <input type="number" name="a" id="a" value="0"> + 
             <input type="number" name="b" id="b" value="3"> =
-            <output value="result" for="a b">0</output>
-        </form>
+            <output id="result" for="a b">0</output>
+        </form><br><br>
+
+        <form oninput="percent.value = (num.value / 100) * total.value">
+            Число: <input type="number" id="num" value="50">
+            Всего: <input type="number" id="total" value="200">
+            Процент: <output id="percent" for="num total">25</output>%
+        </form><br><br>
+
+        <!-- table>(thead>tr>th{th-$}*3+tfoot>tr>td{td-$}*3+tbody>tr>td{td-$}* -->
+        
+<table>
+    <caption>Пример таблицы с данными о продажах</caption> <!-- Подпись таблицы -->
+    <colgroup> <!-- Группа колонок -->
+        <col style="background-color: lightblue;"> <!-- Первая колонка -->
+        <col span="2" style="background-color: lightgreen;"> <!-- Вторая колонка -->
+    </colgroup>
+
+    <thead> <!-- Заголовок таблицы -->
+        <tr> <!-- Строка -->
+            <th>Продукт</th> <!-- Заголовок ячейки> -->
+            <th>Количество</th>
+            <th>Цена</th>
+        </tr>
+    </thead>
+
+    <tfoot> <!-- Подвал -->
+        <tr> <!-- Строка -->
+            <td>Итого</td>
+            <td>15</td>
+            <td>800 руб.</td>
+        </tr>
+    </tfoot>
+
+    <tbody> <!-- Тело таблицы -->
+        <tr> <!-- Строка -->
+            <td>Яблоки</td> <!-- Ячейка данных -->
+            <td>10</td>
+            <td>500 руб.</td>
+        </tr>
+
+        <tr>
+            <td>Бананы</td>
+            <td>5</td>
+            <td>300 руб.</td>
+        </tr>
+
+        <tr>
+            <td>Апельсины</td>
+            <td>10</td>
+            <td>120 руб.</td>
+        </tr>
+    </tbody>
+
+</table>
 
 
     </main>

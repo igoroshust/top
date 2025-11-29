@@ -1,16 +1,113 @@
-const pets = [
-  { type: 'dog', name: 'Max' },
-  { type: 'cat', name: 'Luna' },
-  { type: 'dog', name: 'Buddy' }
-];
+sessionStorage.setItem('cart', JSON.stringify([
+    { id: 1, quantity: 4 },
+    { id: 2, quantity: 4 },
+    { id: 3, quantity: 4 },
+    { id: 4, quantity: 4 },
+]));
 
-const grouped = pets.reduce((acc, pet) => {
-    acc[pet.type] = acc[pet.type] || [];
-    acc[pet.type].push(pet);
-    return acc;
-}, '');
+document.addEventListener('DOMContentLoaded', updateDisplay);
 
-console.log(grouped);
+function addToCart(productId, quantity) {
+    const cart = getCart();
+    const existing = cart.find(item => item.id === productId); // { id: 1, quantity: 1 }
+    if (existing) {
+        existing.quantity += quantity;
+    } else {
+        cart.push({ id: productId, quantity });
+    }
+    sessionStorage.setItem('cart', JSON.stringify(cart));
+    updateDisplay();
+
+} 
+
+function getCart() {
+    const cart = JSON.parse(sessionStorage.getItem('cart' || '[]'));
+    return cart;
+}
+
+function updateDisplay() {
+    const cart = getCart();
+    document.getElementById('cart-count').textContent = `Количество товаров в корзине: ${cart.reduce((sum, item) => sum + item.quantity, 0)}`;
+}
+
+
+const cartBtn = document.getElementById('cart-btn');
+cartBtn.addEventListener('click', showCartInfo);
+
+
+function showCartInfo() {
+    const cart = getCart();
+    const list = document.getElementById('cart-list');
+    const fragment = document.createDocumentFragment();
+    list.innerHTML = '';
+
+    cart.forEach((item, index) => {
+        const li = document.createElement('li');
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = 'удалить';
+
+        li.textContent = `ID: ${item.id}, количество: ${item.quantity} `;
+        li.appendChild(removeBtn);
+        
+        removeBtn.addEventListener('click', () => {
+            removeBtn.parentElement.remove();
+
+            const index = cart.findIndex(element => element.id === item.id);
+
+            if (index != -1) {
+                cart.splice(index, 1);
+                sessionStorage.setItem('cart', JSON.stringify(cart));
+                updateDisplay();
+            }
+
+        });
+
+        fragment.appendChild(li);
+    });
+
+    list.append(fragment);
+}
+
+setTimeout(() => {
+    addToCart(1, 5);
+
+    setTimeout(() => {
+        addToCart(17, 6);
+    }, 5000);
+
+}, 3000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*
