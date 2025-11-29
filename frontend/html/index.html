@@ -6,12 +6,18 @@
     <meta name="description" content="Страница со структурой HTML5-документа">
     <meta name="robots" content="index, follow">
 
-    <script defer src="/scripts.js"></script>
+    <script src="/scripts.js" defer></script>
+
+    <noscript>
+        <p>Ваш браузер не поддерживает JavaScript. <a href="/no-js-version">Перейти к версии без JS</a></p>
+    </noscript>
 
     <title>MyPage</title>
 </head>
 
 <body>
+
+
     <header>
         <h1>Заголовок сайта</h1>
         <nav>
@@ -65,7 +71,7 @@
         <progress value="90" max="100"></progress><br><br>
 
         <p>Уровень батареи:</p>
-        <meter value="0.2" max="1" min="0" low="0.4" high="0.8" optimum="1">80%</meter>
+        <meter value="1" max="1" min="0" low="0.4" high="0.8" optimum="1" id="timer">80%</meter>
 
         <dl>
             <dt>HTML</dt>
@@ -163,53 +169,67 @@
             Процент: <output id="percent" for="num total">25</output>%
         </form><br><br>
 
-        <!-- table>(thead>tr>th{th-$}*3+tfoot>tr>td{td-$}*3+tbody>tr>td{td-$}* -->
         
-<table>
-    <caption>Пример таблицы с данными о продажах</caption> <!-- Подпись таблицы -->
-    <colgroup> <!-- Группа колонок -->
-        <col style="background-color: lightblue;"> <!-- Первая колонка -->
-        <col span="2" style="background-color: lightgreen;"> <!-- Вторая колонка -->
-    </colgroup>
+        <table>
+            <caption style="background-color: lightgreen;">Таблица с данными о продуктах</caption>
 
-    <thead> <!-- Заголовок таблицы -->
-        <tr> <!-- Строка -->
-            <th>Продукт</th> <!-- Заголовок ячейки> -->
-            <th>Количество</th>
-            <th>Цена</th>
-        </tr>
-    </thead>
+            <colgroup>
+                <col style="background-color: lightblue;">
+                <col style="background-color: lightgray;">
+                <col style="background-color: lightpink;">
+            </colgroup>
 
-    <tfoot> <!-- Подвал -->
-        <tr> <!-- Строка -->
-            <td>Итого</td>
-            <td>15</td>
-            <td>800 руб.</td>
-        </tr>
-    </tfoot>
+            <thead>
+                <tr>
+                    <th>thead-item-1</th>
+                    <th>thead-item-2</th>
+                    <th>thead-item-3</th>
+                </tr>
+            </thead>
 
-    <tbody> <!-- Тело таблицы -->
-        <tr> <!-- Строка -->
-            <td>Яблоки</td> <!-- Ячейка данных -->
-            <td>10</td>
-            <td>500 руб.</td>
-        </tr>
+            <tfoot>
+                <tr>
+                    <td>tfoot-item-1</td>
+                    <td>tfoot-item-2</td>
+                    <td>tfoot-item-3</td>
+                </tr>
+            </tfoot>
 
-        <tr>
-            <td>Бананы</td>
-            <td>5</td>
-            <td>300 руб.</td>
-        </tr>
+            <tbody>
+                <tr>
+                    <td>tbody-item-1</td>
+                    <td>tbody-item-2</td>
+                    <td>tbody-item-3</td>
+                </tr>
+            </tbody>
 
-        <tr>
-            <td>Апельсины</td>
-            <td>10</td>
-            <td>120 руб.</td>
-        </tr>
-    </tbody>
+        </table><br><br>
 
-</table>
+        <table border="1">
+            <caption>Работа colspan наглядно</caption>
+            <tr>
+                <td colspan="2">Ячейка на 2 столбца</td>
+                <td>Обычная ячейка</td>
+            </tr>
 
+            <tr>
+                <td>Ячейка 1</td>
+                <td>Ячейка 2</td>
+                <td>Ячейка 3</td>
+            </tr>
+        </table><br><br>
+
+        <table border="1">
+            <caption>Работа rowspan наглядно</caption>
+            <tr>
+                <td rowspan="2">Ячейка на 2 строки</td>
+                <td>Ячейка 1</td>
+            </tr>
+
+            <tr>
+                <td>Ячейка 2</td>
+            </tr>
+        </table><br><br>
 
     </main>
 
