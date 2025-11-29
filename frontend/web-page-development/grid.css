@@ -1,0 +1,21 @@
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 100px);
+
+    /* justify-items: start;
+    align-items: end; */
+
+    justify-content: space-between;
+    gap: 10px;
+
+    border: 2px solid gold;
+}
+
+.grid div {
+    border: 1px dashed tomato;
+}
+
+.grid div:nth-child(3n + 2) {
+    background: green;
+}
