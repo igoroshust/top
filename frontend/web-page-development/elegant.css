@@ -1,0 +1,17 @@
+.products-wrapper {
+
+    display: grid;
+    margin-bottom: 40px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 30px;
+
+    /* Реализация блока на flex
+    display: flex;
+    flex-wrap: wrap;
+
+    */
+
+    /* column-gap и row-gap не поддерживаются Safari (браузер по умолчанию для iOS-устройств)
+    column-gap: 30px;
+    row-gap: 30px; */
+}
