@@ -1,15 +1,19 @@
-.container {
-    display: grid;
-    grid-template-columns:
-        [sidebar] 1fr
-        [content] 2fr;
-    grid-template-rows:
-        [header] auto
-        [main] 1fr
-        [footer] auto;
+.grid {
+    padding: 10px 15px;
+    background-color: rgb(96, 143, 204);
+    border: 1px solid rgb(24, 84, 133);
+    text-align: center;
+    font-size: 22px;
+    font-family: sans-serif;
+    color: #fff;
 }
 
-.header { grid-column: sidebar / content; grid-row: header; }
-.sidebar { grid-column: sidebar; grid-row: main; }
-.content { grid-column: content; grid-row: main; }
-.footer { grid-column: sidebar / content; grid-row: footer; }
+.grid {
+    display: grid;
+    /* grid-template-columns: 150px 150px 150px 150px;
+    grid-template-rows: repeat(3, 100px); */
+
+    grid-template: repeat(3, 100px) / repeat(4, 150px);
+
+    grid-gap: 20px;
+}
