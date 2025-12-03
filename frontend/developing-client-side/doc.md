@@ -1,11 +1,15 @@
 Темы для разбора:
+- Тег map, area (HTML)
 - Объект Event
 - Фазы распространения события (event propagation)
 - Делегирование событий
+- Array.from() + сочетание с forEach
+- Конструкция `Array.from(nodeList).map()`
+- Конструкция `Array.prototype.forEach.call()`
+- Оператор распространения (...)
 - Подробнее про localStorage (где и как хранятся данные?)
 
 - new MouseEvent
-- Конструкция `Array.from(nodeList).map()`
 - FETCH API
 - Делегирование событий (event delegation)
 - Массивоподобные структуры в JS (HTMLCollection, Node, NodeList и т.д.)
@@ -558,3 +562,39 @@ const adults = users.filter(user => user.age >= 18);
 console.log(adults); 
 ```
 Не мутирует исходный массив. Если ни один элемент не подходит, возвращает пустой массив [].
+
+
+
+## Перебор массовоподобных элементов 
+**С помощью Array.from()**
+```javascript
+Array.from(document.getElementsByTagName('link')).forEach(item => console.log(item.href));
+```
+
+**for-of**
+```javascript
+for (const item of document.getElementsByTagName('link')) {
+    console.log(item.href);
+}
+```
+- Более производительный
+- Не создаёт промежуточный массив
+- Работает прямо с HTMLCollection
+- Быстрее для больших коллекций
+
+
+**Оператор распространения (...)**
+```javascript
+[...document.getElementsByTagName('link')].forEach(item => console.log(item.href));
+```
+- Аналогично Array.from(), но короче.
+
+**Array.prototype.forEach.call()**
+```javascript
+Array.prototype.forEach.call(
+    document.getElementsByTagName('link'),
+    item => console.log(item.href)
+);
+```
+- Для старых браузеров;
+- Работает в IE (если нужна legacy-поддержка)

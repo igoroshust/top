@@ -1,5 +1,8 @@
 https://www.blackbox.ai/chat/ExOAveC
 
+- Тег map + area
+- rel (noopener, norefferer)
+- Тег link (атрибут media)
 
 - Метрики производительности
 - Правила WCAG (веб-доступность):

@@ -689,3 +689,148 @@ btn.dispatchEvent(new MouseEvent('click', {
 
 Эти примеры показывают базовую работу с событиями. Для сложных приложений необходимо использовать делегирование событий (назначение на родителя для динамических элементов). Необходимо избегать inline-обработчиков в пользу `addEventListener` для лучшей управляемости.
 
+
+## Знакомство с объектами Document и Link
+В JS объект Document представляет собой корневой элемент Document Object Model (DOM), который моделирует структуру HTML-документа. Он позволяет взаимодействовать с содержимым страницы, манипулировать элементами, стилями и событиями. Объект Link (часто подразумевает элементы ссылок, такие как `<a>` или `<link>`) относится к интерфейсам DOM для работы с гиперссылками и внешними ресурсами.
+
+### Объект Document
+Объект `Document` является глобальным и доступен через `window.document` или просто `document`. Он наследуется от `Node` и предоставляет интерфейс для доступа к элементам, их создания, изменения и удаления.
+
+**Основные свойства**
+- `document.body`: Ссылка на элемент body
+- `document.head`: Ссылка на элемент head
+- `document.title`: Заголовок документа (из title)
+- `document.URL`: Полный URL текущего документа
+- `document.cookie`: Доступ к cookies
+- `document.links`: HTMLCollection всех элементов `<a>` и `<area>` (ссылок)
+- `document.forms`: HTMLCollection всех форм
+- `document.images`: HTMLCollection всех изображений.
+
+
+**Основные методы**
+- `document.getElementById(id)`: Возвращает элемент по ID
+- `document.getElementsByTagName(tag)`: Возвращает коллекцию элементов по тегу
+- `document.querySelector(selector)`: Возвращает первый элемент, соответствующий CSS-селектору.
+- `document.querySelectorAll(selector)`: Возвращает все элементы, соответствующие селектору
+- `document.createElement(tag)`: Создаёт новый элемент
+- `document.createTextNode(text)`: Создаёт текстовый узел
+- `document.appendChild(node)`: Добавляет дочерний узел
+- `document.removeChild(node)`: Удаляет дочерний узел
+- `document.addEventListener(event, handler)`: Добавляет обработчик событий
+
+Document также поддерживает события, такие как `DOMContentLoaded` (для выполнения кода после загрузки DOM).
+
+### Объект Link
+Link относится к элементам ссылок в DOM. Это может быть:
+- HTMLAnchorElement (для `<a>`): представляет гиперссылки.
+- HTMLLinkElement(для `<link>`): представляет ссылки на внешние ресурсы (CSS, иконки и т.д.)
+
+Оба наследуются от HTMLElement и предоставляют свойства для работы с URL, атрибутами и поведением.
+
+**Основные свойства HTMLAnchorElement(`<a>`)**
+- `href`: URL ссылки (абсолютный или относительный).
+- `target`: Где открыть ссылку (например, `_blank` для нового окна)
+- `rel`: Отношение к текущему документу (вроде noopener для безопасности)
+- `textContent`: Текст ссылки
+- `hostname`, `pathname`, `search`: Части URL.
+
+**Основные свойства HTMLLinkElement(`<link>`)**
+- `href`: URL ресурса (например, css-файла);
+- `rel`: тип связи (например, stylesheet);
+- `type`: MIME-тип ресурса;
+- `media`: медиа-запросы для применения стиля
+
+Оба типа элементов (HTMLAnchorElement, HTMLLinkElement) можно получить через `document.querySelector('a')` или `document.querySelector('link')`, а коллекцию ссылок - через `document.links`.
+
+### Практические примеры
+
+**1. Работа с Document (доступ к элементам и изменение)**
+```javascript
+// Получить заголовок документа
+console.log(document.title); // Вывод: "Document"
+
+// Изменить заголовок
+document.title = "Новый заголовок";
+
+// Получить элемент по ID и изменить его текст
+const link = document.getElementById('myLink');
+link.textContent = "Обновлённая ссылка";
+
+// Создать новый элемент и добавить его в body
+const newElement = document.createElement('div');
+newElement.textContent = 'New Element Content';
+document.body.appendChild(newElement);
+
+// Использовать querySelector для поиска
+const search = document.querySelector('a');
+console.log(search.href); // "https://..."
+```
+
+**2. Работа с Link (манипуляция ссылками)**
+```javascript
+// Получить все ссылки
+const links = document.links;
+console.log(links.length); // Количество ссылок на странице
+
+// Изменить href первой ссылки
+if (links[0]) {
+  links[0].href = "https://google.com";
+  links[0].textContent = "Ссылка на Google";
+  links[0].target = "_blank"; // Открывать в новом окне
+}
+
+// Создать новую ссылку и добавить её
+const newLink = document.createElement('a');
+newLink.href = "https://example.com/";
+newLink.textContent = "Example";
+newLink.rel = "noopener"; // Для безопасности
+document.body.appendChild(newLink);
+```
+
+**3. Работа с Link (элемент <link> для CSS)**
+```javascript
+const cssLink = document.createElement('link');
+cssLink.rel = 'stylesheet';
+cssLink.href = 'https://example.com/';
+document.head.appendChild(cssLink);
+
+// Проверить свойства существующего <link>
+const existingLink = document.querySelector('link[rel="stylesheet"]');
+if (existingLink) {
+  console.log(existingLink.href); // URL CSS-файла
+  console.log(existingLink.media); // медиа-запросы (при наличии)
+}
+```
+
+**4. События с Document и Link**
+Первый вариант
+```javascript
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM загружен');
+});
+
+// Обработчик клика по ссылке (предотвратить переход)
+const link = document.getElementById('myLink');
+link.addEventListener('click', (event) => {
+  event.preventDefault();
+  alert('Ссылка нажата, но переход отменён');
+});
+```
+
+Второй вариант
+```javascript
+document.addEventListener('DOMContentLoaded', () => {
+  const handleLinkClick = (event) => {
+    const link = event.target.link('a');
+    if (link) {
+      event.preventDefault();
+      console.log('Переход запрещён');
+    }
+  }
+  document.body.addEventListener('click', handleLinkClick)
+});
+```
+
+**Заключение**
+Объект Document - это основа для манипуляции DOM, позволяющая динамически изменять страницу. Объекты Link (ссылки) полезны для работы с навигацией и ресурсами.
+
