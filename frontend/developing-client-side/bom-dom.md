@@ -185,3 +185,128 @@ Selection - это объект, представляющий выделение
 - `extend(node, offset)`: Расширяет выделение до указанной точки.
 
 Selection работает с объектами `Range` (для точного управления диапазонами текста). Выделение может быть пустым или содержать текст из нескольких элементов.
+
+**Пример-1. Выделить текст**
+```javascript
+const element = document.getElementsByTagName('h1');
+const sel = window.getSelection();
+sel.selectAllChildren(element); // Выделит весь текст
+```
+
+
+**Пример-2. Получить выделенный текст**
+```javascript
+const selection = window.getSelection();
+const selectedText = selection.toString();
+console.log(selection); // Выведет выделенный текст, если естьы
+```
+
+**Пример-3. Установить выделение в input/textarea**
+```javascript
+const input = document.getElementById('myInput');
+input.focus(); // Сначала фокус
+input.setSelectionRange(0, 5); // Выделить символы с 0 до 5
+```
+
+**Пример-4. Выделение текста для contenteditable-элементов**
+```javascript
+const div = document.querySelector('.test');
+
+// Создаём диапазон
+const range = document.createRange();
+const selection = window.getSelection();
+
+// Находим текстовый узел внутри div (обычно firstChild)
+const textNode = div.firstChild;
+
+// Устанавливаем границы выделения
+range.setStart(textNode, 0); // Начало: позиция 0
+range.setEnd(textNode, textNode.length-4); // Конец: длина текста
+
+// Применяем выделение
+selection.removeAllRanges();
+selection.addRange(range);
+```
+
+**Пример-5. Расширить выделение (код из примера 4 должен быть запущен)**
+```javascript
+const selection = window.getSelection();
+if (selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0); // метод getRangeAt(index) возвращает объект Range по указанному индексу из текущего выделения
+    range.setEnd(range.endContainer, range.endOffset + 4) // Расширить на 10 символов
+
+    // endContainer - свойство указывает узел DOM, в котором находится конечная точка диапазона.
+    // endOffset - свойство показывает позицию внутри endContainer, где заканчивается диапазон.
+
+    selection.removeAllRanges();
+    selection.addRange(range);
+}
+```
+
+**Пример-6. Снять выделение**
+```javascript
+window.getSelection().removeAllRanges();
+```
+
+Selection работает асинхронно и обновляется при взаимодействии пользователяю Для событий используйте `document.onselectionchange`.
+
+
+### TextRange (Устаревший, для IE)
+TextRange - объект для работы с выделением в старых версиях IE (до IE9). Доступ через `document.selection.createRange()`. Он менее гибкий, чем Selection, и работает только с текстовыми элементами.
+
+**Ключевые свойства и методы**
+- text - получить/установить текст диапазона
+- htmlText - получить html-текст
+- moveStart(unit, count) / moveEnd(unit, count) - сдвинуть начало/конец (unit: 'character', 'word', и тд)
+- select() - выделить диапазон
+- collapse(bool) - свернуть (true - в начало, false - в конец)
+- duplicate() - клонировать диапазон
+- parentElement() - получить родительский элемент
+
+#### Примеры для IE
+
+**Пример-1. Получить выделенный текст**
+```javascript
+if (document.selection) { // Проверка для IE
+    const range = document.selection.createRange();
+    const selectedText = range.text;
+    console.log(selectedText);
+}
+```
+
+**Пример-2. Выделить текст в элементе**
+```javascript
+const element = document.getElementById('myDiv');
+
+if (document.selection) {
+    const range = document.body.createTextRange(); // Или element.createTextRange()
+    range.moveToElementText(element); // Переместить к тексту элемента
+    range.select(); // Выделить
+}
+```
+
+**Пример-3. Установить диапазон**
+```javascript
+if (document.selection) {
+    const range = document.seleciton.createRange();
+    range.moveStart('character', 5); // Сдвинуть начало на 5 символов
+    range.moveEnd('character', -3); // Сдвинуть конец на -3 
+    range.select();
+}
+```
+
+**Пример-4. Расширить выделение**
+```javascript
+if (document.selection) {
+    const range = document.seleciton.createRange();
+    range.moveEnd('character', 10);
+    range.select();
+}
+```
+TextRange не поддерживает множественные диапазоны и работает только с текстом, без сложных DOM-узлов.
+
+**Рекомендации**
+- Использовать Selection для новых проектов - он стандартизирован W3C и поддерживается везде, кроме очень старых IE.
+- Для IE добавляйте полифиллы или проверки
+- Быть осторожным с contenteditable: Selection может конфликтовать с браузерными событиями
+- Для более сложных задач (например, в редакторах) ко вниманию библиотеки вроде Quill или TimyMCE, которые абстрагируют эти API.

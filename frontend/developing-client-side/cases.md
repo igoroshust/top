@@ -1,3 +1,87 @@
+## Корзина (в процессе)
+```javascript
+sessionStorage.setItem('cart', JSON.stringify([
+    { id: 1, quantity: 1 },
+    { id: 2, quantity: 3 },
+]));
+
+document.addEventListener('DOMContentLoaded', updateDisplay);
+
+function addToCart(productId, quantity) {
+    const cart = getCart();
+    const existing = cart.find(item => item.id === productId);
+    if (existing) {
+        existing.quantity += quantity;
+    } else {
+        cart.push({ id: productId, quantity})
+        sessionStorage.setItem('cart', JSON.stringify(cart));
+    }
+    updateDisplay();
+}
+
+
+
+
+const btnInfo = document.getElementById('cart-btn');
+const list = document.getElementById('cart-list');
+const fragment = document.createDocumentFragment();
+
+btnInfo.addEventListener('click', showCartInfo);
+
+
+function showCartInfo() {
+    const cart = getCart();
+
+    cart.forEach(item => {
+        const li = document.createElement('li');
+        const btnRemove = document.createElement('button');
+
+        btnRemove.textContent = 'remove';
+        li.textContent += `ID: ${item.id}, quantity: ${item.quantity} `;
+
+        li.appendChild(btnRemove);
+        fragment.appendChild(li);
+
+        btnRemove.addEventListener('click', function(){
+           list.removeChild(this.parentElement);
+
+           const deleteElement = cart.findIndex((element) => item.id === element.id);
+
+            if (deleteElement != -1) {
+                 cart.splice(deleteElement, 1);
+                 sessionStorage.setItem('cart', JSON.stringify(cart));
+                 updateDisplay();
+            }
+           
+        })
+
+    });
+
+    list.appendChild(fragment);
+}
+
+function updateDisplay() {
+    const cart = getCart();
+    document.getElementById('cart-count').textContent = `Количество элементов в корзине: ${cart.reduce((sum, item) => sum += item.quantity, 0)}`;
+}
+
+function getCart() {
+    return JSON.parse(sessionStorage.getItem('cart' || '[]'));
+}
+
+addToCart(3, 5);
+addToCart(4, 5);
+addToCart(5, 5);
+addToCart(6, 5);
+
+```
+
+
+
+
+
+
+
 ## Перебор элементов HTMLCollection на примере ссылок (возможные и рекомендуемые способы)
 ### Первичный код (мой)
 ```javascript
