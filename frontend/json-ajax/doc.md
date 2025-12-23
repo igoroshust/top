@@ -1,3 +1,4 @@
+- https://httpbin.org/post
 - Стандарт RFC 8259
 - RESTful API
 
@@ -420,3 +421,501 @@ RESTFul API - архитектурный стиль для создания ве
 - - `POST /users` - создать нового пользователя (отправляет JSON-данные)
 - - В JS: `fetch('/api/users', { method: 'GET' }).then(res => res.json())` - получение данных в JSON-формате.
 
+7. MIME-тип
+MIME-тип (Multipurpose Internet Mail Extensions) - это стандарт, указывающий тип данных (файла или потока), чтобы программы (браузеры, серверы и тд) знали, как их обрабатывать. Позволяет системе понять:
+- что это (текст, изображение, аудио, видео, скрипт или другой контент);
+- каким приложением/модулем его открывать;
+- как безопасно передавать и кэшировать.
+
+**Формат**
+MIME-тип состоит из двух частей: `тип/подтип`. Примеры
+- - text/html
+- - text/css
+- - image/png
+- - application/json
+- - application/javascript
+- - audio/mpeg
+- - video/mp4
+
+**Использование**
+- В HTTP-заголовке `Content-Type` (сервер сообщает клиенту тип данных);
+- В форматах загрузки файлов (проверка допустимых типов);
+- В email-вложениях (определение типа прикреплённого файла);
+- В API и AJAX-запросах (корректная обработка ответов).
+
+**Важность**
+- Корректное отображение: браузер понимает, что показывать как картинку, а что - как текст.
+- Безопасность: предотвращает выполнение вредоносного кода (например, если JS-файл ошибочно отослан как `text/html`).
+- Оптимизация: браузер может эффективнее кэшировать ресурсы, зная их тип.
+
+
+## Синхронные и асинхронные операции в JavaScript
+JavaScript - однопоточный язык, что означает, что он выполняет код последовательно. Однако для работы с внешними ресурсами, такими как серверы (HTTP-запросы), нужны механизмы, чтобы не блокировать основной поток. Синхронные запросы выполняются последовательно и блокируют выполнение кода до его завершения. Асинхронные запросы позволяют коду продолжать работу, пока запрос обрабатывается в фоне, с использованием колбэков (callbacks), промисов (promises) или async/await.
+
+В контексте HTTP-запросов синхронные методы (например, XMLHttpRequest c `async: false`) устарели и не рекомендуются, так как могут "заморозить" интерфейс. Асинхронные запросы – стандарт, особенно с Fetch API.
+
+### Синхронные запросы
+Синхронные запросы блокируют выполнение скрипта до получения ответа. Это полезно для простых сценариев, но в реальных приложениях приводит к плохому UX (интерфейс "зависает").
+
+Пример с XMLHttpRequest (синхронный режим)
+```javascript
+// Создаём объект XMLHttpRequest
+const xhr = new XMLHttpRequest();
+
+// Устанавливаем синхронный режим (async: false)
+xhr.open('GET', 'https://jsonplaceholder.typicode.com/posts/1', false);
+
+// Отправляем запрос
+xhr.send();
+
+// Код здесь выполнится только после получения ответа
+if (xhr.status === 200) {
+  console.log('Ответ:', JSON.parse(xhr.responseText));
+} else {
+  console.error('Ошибка:', xhr.status);
+}
+```
+- В данном случае запрос блокирует поток. Если сервер медленный, страница зависнет.
+- Проблема в том, что это не подходит для браузеров (может вызвать предупреждения), и использовать можно в Node.js для простых скриптов.
+
+### Асинхронные запросы
+Асинхронные запросы не блокируют код. Они используют колбэки, промисы или async/await для обработки результатов.
+
+**Пример с коллбэками (callback-based)**
+```javascript
+const xhr = new XMLHttpResponse();
+
+xhr.open('GET', 'https://jsonplaceholder.typicode.com/posts/1', true);
+
+// onload обязателен для обработки синхронных запросов
+xhr.onload = function() {
+  if (xhr.status === 200) {
+    console.log('Ответ: ', JSON.parse(xhr.responseText));
+  } else {
+    console.error('Ошибка: ', xhr.status)
+  }
+};
+
+xhr.onerror = function() {
+  console.error('Сетевая ошибка');
+}
+
+xhr.send();
+
+console.log('Запрос отправлен, продолжаем...');
+```
+
+**Пример с промисами (Promises) и Fetch API**
+Fetch API - современный способ для асинхронных запросов, возвращает промис.
+```javascript
+fetch('https://jsonplaceholder.typicode.com/posts/1')
+.then(response => {
+  if (!response.ok) {
+    throw new Error('Ошибка:', response.status);
+  }
+  return response.json(); // Парсим JSON
+})
+.then(data => {
+  console.log('Ответ:', data);
+})
+.catch(error => {
+  console.error('Ошибка:', error)
+});
+
+// Код здесь выполнится сразу
+console.log('Запрос отправлен, продолжаем...');
+```
+В данном случае `fetch` возвращает промис, `.then()` обрабатывает успех, `.catch()` - ошибки. Код не блокируется.
+
+**Пример с async/await (синтаксический сахар над промисами)**
+```javascript
+async function fetchData() {
+  try {
+    const response = await fetch('https://jsonplaceholder.typicode.com/posts/1');
+    if (!response.ok) {
+      throw new Error('Ошибка сети: ' + response.status);
+    }
+    const data = await response.json();
+    console.log('Ответ:', data);
+  } catch (error) {
+    console.error('Ошибка:', error);
+  }
+}
+
+// Вызов функции
+fetchData();
+
+// Код выполняется сразу
+console.log('Запрос отправлен, продолжаем...');
+```
+`await` приостанавливает функцию, но не блокирует весь скрипт. Идеально для читаемого кода.
+
+**Асинхронный запрос с обработкой нескольких запросов**
+```javascript
+async function fetchMultiple() {
+  try {
+    const [post1, post2, post3] = await Promise.all([
+      fetch("https://jsonplaceholder.typicode.com/posts/1").then((r) =>
+        r.json()
+      ),
+      fetch("https://jsonplaceholder.typicode.com/posts/2").then((r) =>
+        r.json()
+      ),
+      fetch("https://jsonplaceholder.typicode.com/posts/3").then((r) =>
+        r.json()
+      ),
+    ]);
+    console.log("Пост №1:", post1.title);
+    console.log("Пост №2:", post2.title);
+    console.log("Пост №3:", post3.title);
+  } catch (error) {
+    console.error("Ошибка:", error);
+  }
+}
+
+fetchMultiple();
+```
+`Promise.all` выполяет запросы параллельно, не блокируя основной поток.
+
+**BEST PRACTICE**
+- Использовать асинхронные методы: Fetch API или Axios для браузеров.
+- Обработка ошибок: всегда проверять статус ответа и использовать try/catch
+- Избегать синхронных запросов в браузерах: они могут вызвать "blocking" предупреждения;
+- Для сложных сценариев: использовать async/await для читаемости, Promise.all для параллелизма.
+- Тестирование: в браузере проверять DevTools (Network tab), в Node.js - с помощью Jest или Mocha.
+
+
+## XMLHttpRequest
+XMLHttpRequest (XHR) - это встроенный объект JavaScript, который позволяет отправлять HTTP-запросы к серверу асинхронно или синхронно. Он был введён в Internet Explorer и стал стандартом для AJAX (Asynchronous JS and XML). XHR поддерживает различные методы HTTP (GET, POST, PUT и т.д.) и позволяет работать с данными в форматах JSON, XML, текст и т.д. XMLHttpRequest считается устаревшим по сравнению с Fetch API, но всё ещё используется в legacy-коде и поддерживается во всех браузерах.
+
+- **Основные возможности**: Отправка запросов без перезагрузки страницы, обработка ответов через события или колбэки.
+- **Поддержка**: Доступен в браузерах и Node.js (через полифилы или модули).
+- **Ограничения**: Не поддерживает соверменные фичи вроде AbortController для отмены запросов, и код может быть громоздким по сравнению с Fetch.
+
+### Создания и инициализация XMLHttpRequest
+
+**Работа с объектом**
+```javascript
+const xhr = new XMLHttpRequest(); // Создание нового экземпляра
+
+// Инициализация запроса с методом open(method, url, async, user, password)
+xhr.open('GET', 'https://api.example.com/data', true)
+
+// Отправка запроса с помощью send(body)
+xhr.send(); // для GET
+xhr.send(JSON.stringify({key: 'value'})); // для POST с JSON
+```
+Параметры xhr.open()
+- `method`: Строка, например "GET", "POST".
+- `url`: URL сервера.
+- `async`: Булево (true для асинхронного, false для синхронного). По умолчанию true.
+- `user` и `password`: Опционально для базовой аутентификации.
+
+Параметры xhr.send()
+- `body`: Данные для отправки (для POST/PUT). Для GET - null или undefined.
+
+
+### Основные методы XMLHttpRequest
+Методы управляют жизненным циклом запроса: от открытия до отправки и отмены.
+
+- `open(method, url, async, user, password)`: инициализация запроса без отправки
+- `send(body)`: отправляет запрос. Для синхронных запросов блокирует код до ответа.
+- `setRequestHeader(header, value)`: устанавливаем заголовки запроса (вызывается после open, но перед send)
+```javascript
+xhr.setRequestHeader('Content-Type', 'application/json');
+```
+- `getResponseHeader(header)`: получает значение заголовка ответа
+- `getAllResponseHeaders()`: возвращает все заголовки ответа как строку
+- `abort()`: отменяет текущий запрос
+- `overrideMimeType(mimeType)`: переопределяет mime-тип ответа (редко используется)
+
+
+### Основные свойства XMLHttpRequest
+Свойства предоставляют состояние запроса и данные ответа. Большинство доступны только после `send()`.
+- `readyState`: Число, указывающее состояние запроса (0-4):
+- - 0: UNSENT (не инициализирован)
+- - 1: OPENED (открыт с `open()`)
+- - 2: HEADERS_RECEIVED (заголовки получены)
+- - 3: LOADING (данные загружаются)
+- - 4: DONE (завершено)
+
+- `status`: HTTP-статус ответа (например, 200 для успеха);
+- `statusText`: Текст статуса (например, "OK");
+- `responseText`: Тело ответа как строка;
+- `responseXML`: Тело ответа как XML-документ (если MIME-тип XML);
+- `response`: Обобщённое свойство (в новых браузерах, может быть ArrayBuffer и тд)
+- `timeout`: Таймаут в миллисекундах (по умолчанию 0 - без таймаута)
+- `withCredentials`: Булево для отправки куки с кросс-доменными запросами.
+
+### События XMLHttpRequest
+XHR работает на основе событий. Основное – `readystatechange`, но есть и другие.
+- `readystatechange`: Срабатывает при изменении `readyState`. Проверяем `xhr.readyState === 4` для завершения.
+- `load`: Срабатывает при успешном завершении (readyState 4 и статус 200-299);
+- `error`: Срабатывает при сетевой ошибке;
+- `abort`: Срабатывает при отмене запроса;
+- `timeout`: Срабатывает при превышении таймаута. Это свойство устанавливает максимальное время (в миллисекундах) на выполнение всегда запроса - от отправки (`send()`) до получения полного ответа.
+- `loadstart`, `loadend`, `progress`: Для отслеживания прогресса загрузки;
+- `onprogress`: Срабатывает во время загрузки данных с сервера. Оно позволяет отслеживать, сколько данных уже получено, и вычислять процент прогресса. Срабатывает во время фазы `readyState` 3 (LOADING), когда данные поступают порциями (chunks).
+- `onerror`: Срабатывает при сетевой ошибке во время выполнения XMLHttpRequest (например, потеря соединения, недоступность сервера, блокировка запросом брандмауэром).
+
+
+**Пример обработки события**
+```javascript
+xhr.onreadystatechange = function() {
+  if (xhr.readyState === 4) {
+    if (xhr.status === 200) {
+      console.log('Успех:', xhr.responseText);
+    } else {
+      console.error('Ошибка:', xhr.status);
+    }
+  }
+};
+```
+
+### Практические примеры использования
+
+**Пример-1. Простой асинхронный запрос**
+```javascript
+const xhr = new XMLHttpRequest();
+
+xhr.open('GET', 'https://jsonplaceholder.typicode.com/posts/1', true);
+
+xhr.onload = function() {
+    if (xhr.status === 200) {
+        const data = JSON.parse(xhr.responseText);
+        console.log('Данные:', data);
+    } else {
+        console.error('Ошибка:', xhr.status);
+    }
+};
+
+xhr.onerror = function() {
+    console.error('Сетевая ошибка');
+};
+
+xhr.send();
+```
+Запрос обрабатывается асинхронно. Код после `send()` выполняется сразу. Обработка в `onload`.
+
+**Пример-2. Синхронный POST-запрос (не рекомендуется для браузеров)**
+```javascript
+const xhr = new XMLHttpRequest();
+
+xhr.open('POST', 'https://jsonplaceholder.typicode.com/posts', false);
+
+xhr.setRequestHeader('Content-Type', 'application/json');
+
+xhr.send(JSON.stringify({
+    title: 'foo',
+    body: 'bar',
+    userId: 1
+}));
+
+if (xhr.status === 201) {
+    console.log('Создано:', JSON.parse(xhr.responseText));
+} else {
+    console.error('Ошибка:', xhr.status);
+}
+```
+Код блокируется до ответа. В браузере может вызвать "заморозку" интерфейса.
+
+**Пример-3. Асинхронный запрос с прогрессом и таймаутом**
+```javascript
+const xhr = new XMLHttpRequest();
+
+xhr.open('GET', 'https://httpbin.org/delay/2', true); // Задержка 2 секунды
+
+xhr.timeout = 3000; // 3 секунды timeout
+
+xhr.onprogress = function(event) {
+    if (event.lengthComputable) {
+        console.log('Прогресс:', (event.loaded / event.total) * 100 + '%');
+    }
+};
+
+xhr.onload = function() {
+    console.log('Завершено:', xhr.responseText);
+};
+
+// Событие сработает, если запрос превышает установленный timeout
+xhr.ontimeout = function() {
+    console.error('Таймаут');
+};
+
+xhr.send();
+```
+В данном коде отслеживается прогресс загрузки. Если сервер медленный, срабатывает таймаут.
+Комментарии
+- `xhr.onprogress` - Срабатывает во время загрузки данных с сервера. Позволяет отслеживать, сколько данных уже получено и вычислять процент прогресса. 
+- `event.lengthComputable` - Указывает, известен ли общий размер загружаемых данных (true - да, false - нет).
+- `event.loaded` - Число (в байтах), указывающее, сколько данных уже загружено на данный момент. Если загружено 512 байт, event.loaded будет 512.
+- `event.total` - Число (в байтах), указывающее размер данных, которые должны быть загружены. Для файла размером 1024 байта event.total будет 1024.
+- `xhr.ontimeout` - Событие срабатывает, если запрос превышает установленный timeout.
+
+**Пример-4. Отправка формы с файлом (multipart/form-data)**
+HTML
+```html
+<body>
+  <input type="file" id="file-input" accept="image/*"> <!-- Элемент для загрузки файла -->
+  <button onclick="uploadFile()">Загрузить файл</button>
+</body>
+```
+
+JavaScript
+```javascript
+function uploadFile() {
+  const fileInput = document.getElementById('file-input');
+  if (!fileInput.files[0]) {
+    alert('Выберите файл!');
+    return;
+  }
+
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', 'https://httpbin.org/post', true);
+
+  const formData = new FormData();
+  formData.append('file', fileInput.files[0]); // Добавляем файл
+  formData.append('name', 'example'); // Добавляем текстовое поле
+
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      console.log('Файл загружен:', JSON.parse(xhr.responseText));
+      // Ответ от httpbin.org: объект с полями form, files и т.д.
+    } else {
+      console.error('Ошибка:', xhr.status);
+    }
+  };
+
+  xhr.onerror = function() {
+    console.log('Сетевая ошибка');
+  };
+
+  xhr.send(formData); // Отправляем FormData
+}
+```
+Комментарии
+`formData` - это встроенный в JS интерфейс для удобного формирования и отправки данных в формате multipart/form-data (стандартный формат для загрузки файлов и сложных форм через HTTP). Решает 2 ключевые задачи: 
+- Отправка файлов через AJAX (XMLHttpRequest или fetch)
+- Упрощает сбор данных формы, включая тектосвые поля и файлы, в единый объект для отправки.
+
+### Плюсы и минусы XMLHttpRequest
+**Плюсы**
+- Полный контроль над запросом (заголовки, таймауты, прогресс);
+- Поддержка синхронных запросов (для Node.js);
+- Широкая поддержка в старых браузерах.
+
+**Минусы**
+- Громоздкий код по сравнению с Fetch API.
+- Не поддерживает промисы нативно (нужны обёртки);
+- Синхронный режим блокирует UI в браузерах;
+- Нет встроенный поддержки для отмены (нет AbortController)
+
+**Альтернативы и лучшие практики**
+- Современная альтернатива: Fetch API - проще, возвращает промисы, поддерживает async/await.
+- Библиотеки: Axios или jQuery.ajax для упрощения
+- Лучшие практики:
+- - Всегда использовать асинхронный режим в браузерах;
+- - Проверять `xhr.status` и обрабатывать ошибки;
+- - Для кросс-доменных запросов настроить CORS на сервере;
+- - Тестировать в DevTools (Network tab) для отладки;
+- - Избегать XHR для новых проектов, выбор в пользу Fetch.
+
+
+
+## Введение в Ajax (Asynchronous JavaScript and XML)
+Ajax (Asynchronous JavaScript and XML) - это техника веб-разработки, позволяющая обновлять части веб-приложения асинхронно, без полной перезагрузки. Она основана на XMLHttpRequest (XHR) или современных API (Fetch). Ajax делает веб-приложения более интерактивными, как Gmail или Google Maps. Название включает "XML", но сегодня чаще используется JSON или другие форматы. Ajax является не отдельной технологией, а комбинацией JS, HTML, CSS и HTTP.
+
+- **История**: Введён в 2005 году Jesse James Garrett (революционер веба, позволивший динамические обновления);
+- **Ключевые компоненты**: JS для запросов, сервер для обработки, DOM для обновления UI;
+- **Использование**: Формы, часы, прокрутки, поиск в реальном времени.
+
+### Механизм работы Ajax
+Ajax отправляет HTTP-запросы в фоне, получает данные и обновляет страницу. Процесс:
+1. **Событие**: Пользователь взаимодействует (клик, ввод).
+2. **Запрос**: JS отправляет асинхронный запрос.
+3. **Обработка**: Сервер отвечает данными.
+4. **Обновление**: JS парсит данные и изменяет DOM.
+
+- Асинхронность: Код не блокируется; пользователь может продолжать взаимодействовать.
+- Формат данных: JSON (популярно), XML, HTML, текст.
+- Безопасность: Использовать HTTPS; проверять CORS для кросс-доменных запросов.
+
+### XMLHttpRequest как основа Ajax
+XHR - ядро Ajax. Он позволяет отправлять запросы и обрабатывать ответы. 
+
+**Пример-1. Простой GET-запрос для загрузки данных**
+HTML
+```html
+<div id="content"></div>
+```
+JS
+```javascript
+const xhr = new XMLHttpRequest();
+
+xhr.open('GET', 'https://jsonplaceholder.typicode.com/posts/1', true);
+
+xhr.onload = function() {
+  if (xhr.status === 200) {
+    const data = JSON.parse(xhr.responseText);
+    document.getElementById('content').innerHTML = `${data.title}`
+  }
+}
+
+xhr.send();
+```
+Код выше загружен пост и обновляет DOM без перезагрузки.
+
+**Пример-2. POST-запрос для отправки формы (без перезагрузки)**
+HTML
+```html
+ <form id="myForm"><input name="name"><button type="submit">Отправить</button></form>
+```
+
+JS
+```javascript
+document.getElementById("myForm").addEventListener("submit", function (e) {
+  e.preventDefault(); // Предотвращает перезагрузку
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "https://httpbin.org/post", true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      console.log("Отправлено: " + JSON.parse(xhr.responseText).data);
+    }
+  };
+  xhr.send(JSON.stringify({ name: this.name.value }));
+});
+```
+Комментарии
+0. Данный код отправляет данные формы асинхронно; показывает лог с ответом.
+1. `this` - это сам элемент формы (<form id="myForm">);
+2. `this.name` - это поле ввода внутри формы с атрибутом `name="name"`;
+3. `.value` - свойство элемента формы, содержащее текущее значение, введённое пользователем в поле;
+`this.name.value` возвращает текст, который пользователь ввёл в поля "Имя".
+
+**Пример-3. Ajax с ответом для загрузки файла**
+HTML
+```html
+<input type="file" id="file"><button onclick="upload()">Загрузить</button><progress id="progress" max="100"></progress>
+```
+
+JS
+```javascript
+function upload() {
+  const file = document.getElementById('file').files[0];
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', 'https://httpbin.org/post', true);
+  const formData = new FormData();
+  formData.append('file', file);
+  xhr.upload.onprogress = function(e) {
+    if (e.lengthComputable) {
+      document.getElementById('progress').value = (e.loaded / e.total) * 100;
+    }
+  };
+  xhr.onload = function() {
+    console.log('Файл загружен');
+  };
+  xhr.send(formData);
+}
+```
