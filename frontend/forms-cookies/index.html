@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="./scripts.js" defer></script>
+
+    <title>Document</title>
+  </head>
+  <body>
+    <form action="" id="contactForm" method="post">
+      <fieldset>
+        <legend>Личные данные</legend>
+        <div class="contactForm__name">
+          <label for="name">Имя:</label>
+          <input type="text" id="name" name="name" required />
+        </div>
+        <div class="contactForm__genderGroup" aria-labelledby="gender-label">
+          <label id="gender-label">Пол:</label>
+          <input type="radio" id="male" name="gender" , value="male" />
+          <!-- Атрибут name объединяет радиокнопки в группу -->
+          <label for="male">Мужской</label>
+          <input type="radio" id="female" name="gender" value="female" />
+          <!-- Атрибут name объединяет радиокнопки в группу -->
+          <label for="female">Женский</label>
+        </div>
+
+        <div class="contactForm__country">
+          <label for="country">Страна</label>
+          <select id="country" name="country">
+            <option value="" selected disabled hidden>Укажите страну</option>
+            <option value="us">США</option>
+            <option value="ru">Россия</option>
+            <option value="de">Германия</option>
+          </select>
+        </div>
+
+        <div class="contactForm__messages">
+          <label for="message">Сообщение:</label>
+          <textarea
+            name="message"
+            id="message"
+            rows="4"
+            cols="50"
+            placeholder="Введите текст..."
+          ></textarea>
+        </div>
+        <!-- 
+        <div id="gender-group">
+            <label for="male">Пол:</label>
+            <input type="radio" id="male" name="gender" , value="male" />
+            <label for="male">Мужской</label>
+            <input type="radio" id="female" name="gender" value="female" />
+            <label for="female">Женский</label>
+        </div> -->
+      </fieldset>
+
+      <fieldset>
+        <legend>Интересы</legend>
+        <div class="contactForm__interests">
+          <input type="checkbox" id="sports" name="interests" value="sports" />
+          <label for="sports">Спорт</label>
+          <input type="checkbox" id="music" name="interests" value="music" />
+          <label for="music">Музыка</label>
+        </div>
+      </fieldset>
+      <button type="submit">Отправить</button>
+    </form>
+  </body>
+</html>
