@@ -1,11 +1,3 @@
-- spread operator
-- Array.from()
-- for...of
-- regex
-- ES6+
-- iterator + generator
-
-
 ### **Анализ знака числа (положительное или отрицательное)**
 1) Простой вариант
 ```javascript
@@ -101,64 +93,6 @@ for (const char of string) count ++;
 console.log('count :>> ', count); // 11
 ```
 
-### **Вывести последний символ строки**
-```javascript
-const string = 'igoroshust';
-
-console.log(
-    string.at(-1),
-    string.slice(-1),
-    string[string.length-1],
-    string.charAt(string.length-1),
-    string.substring(string.length - 1)
-);
-```
-
-### **Сравнить первый символ в строке**
-1) Через charAt
-```javascript
-const checkFirstWord = (word1, word2) => {
-    return word1.charAt(0).toLowerCase() === word2.charAt(0).toLowerCase();
-};
-
-result = checkFirstWord('Asd', 'acxz');
-
-console.log(
-    result
-);
-```
-2) Через at()
-```javascript
-const checkFirstWord = (word1, word2) => {
-    return word1.at(0).toLowerCase() === word2.at(0).toLowerCase();
-};
-
-console.log(
-    checkFirstWord('gtewrasdsda', 'Asfsidsdijf')
-);
-```
-
-
-### **Вывести первую цифру числа**
-1) +String
-```javascript
-const number = 123;
-
-console.log(
-    +String(number)[0]
-);
-```
-
-2) Math.floor
-```javascript
-const number = 123;
-
-console.log(
-    Math.floor(number / 100)
-);
-```
-
-
 ### Проверить чётность числа
 1) Простой способ
 ```javascript
@@ -205,3 +139,248 @@ console.log(isEven(numb) ? 'чётное' : 'нечётное');
 2. Плюсы: хорошо иллюстрирует рекурсию
 3. Минусы: крайне неэффективно для больших чисел
 4. Использования: для обучения алгоритмам.
+
+### **Вывести последний символ строки**
+```javascript
+const string = 'igoroshust';
+
+console.log(
+    string.at(-1),
+    string.slice(-1),
+    string[string.length-1],
+    string.charAt(string.length-1),
+    string.substring(string.length - 1)
+);
+```
+
+### **Сравнить первый символ в строке**
+1) Через charAt
+```javascript
+const checkFirstWord = (word1, word2) => {
+    return word1.charAt(0).toLowerCase() === word2.charAt(0).toLowerCase();
+};
+
+result = checkFirstWord('Asd', 'acxz');
+
+console.log(
+    result
+);
+```
+2) Через at()
+```javascript
+const checkFirstWord = (word1, word2) => {
+    return word1.at(0).toLowerCase() === word2.at(0).toLowerCase();
+};
+
+console.log(
+    checkFirstWord('gtewrasdsda', 'Asfsidsdijf')
+);
+```
+
+3) Через index
+```javascript
+const wordCheck = (firstWord, secondWord) => {
+    return firstWord[0].toLowerCase() === secondWord[0].toLowerCase();
+}
+
+console.log(
+    wordCheck('eDS', 'asd')
+);
+```
+
+4) Через startsWith()
+```javascript
+const wordCheck = (firstWord, secondWord) => firstWord.toLowerCase().startsWith(secondWord[0].toLowerCase());
+```
+
+### **Вывести первую цифру числа**
+1) +String
+```javascript
+const number = 123;
+
+console.log(
+    +String(number)[0]
+);
+```
+
+2) Math.floor
+```javascript
+const number = 123;
+
+console.log(
+    Math.floor(number / 100)
+);
+```
+
+3) charAt()
+```javascript
+const num = 123;
+
+console.log(
+    Number(String(num).charAt(0))
+);
+```
+
+4) Деструктуризация массива
+```javascript
+const number = 123;
+const [firstDigit] = Array.from(String(number)); // 1
+const firstDigitWithoutBrackets = Array.from(String(number)); // ['1', '2', '3']
+
+console.log('Number(firstDigit) :>> ', Number(firstDigit)); // 1 (number)
+```
+Комментарии:
+1. `[firstDigit]` - деструктуризация массива. Суть: распаковываем массив и присваиваем первый элемент переменной `firstDigit`. Запись говорит: положи первый элемент массива в переменную firstDigit, а остальные значения (если есть) - игнорируются.
+2. `Array.from(...)` - создаёт массив из строки(`'123'` -> `['1', '2', '3']`)
+
+
+### Вывести последнюю цифру числа
+1) %
+Плюс: не требует преобразования в строку, быстро.
+Минус: для отрицательных чисел даст отрицательный остаток
+```javascript
+const num = 12319203921;
+
+console.log(num % 10);
+
+// С учётом отрицательных значений
+console.log(Math.abs(num) % 10); 
+```
+
+2) at
+```javascript
+const num = 12319203921;
+
+console.log(+String(num).at(-1));
+```
+
+
+3) Через индекс массива
+```javascript
+const num = 123;
+
+const digits = Array.from(String(num));
+const lastNumber = digits[digits.length - 1];
+```
+
+4) Через String и индекс
+```javascript
+const num = 123;
+
+const lastNumber = String(num)[String(num).length - 1];
+```
+
+5) Деструктуризация массива
+Минусы: неэффективно, создаёт лишний массив `rest` и требует дополнительного обращения по индексу.
+```javascript
+const num = 123;
+
+const [first, ...rest] = Array.from(String(num));
+const lastNumber = rest[rest.length - 1];
+
+console.log('Number(lastNumber) :>> ', Number(lastNumber));
+```
+
+### Вывести сумму первого и последнего числа
+1) at
+```javascript
+const num = 123;
+
+console.log(
+    +String(num).at(0) + +String(num).at(-1)
+);
+```
+Второй пример с at
+```javascript
+const num = 12393439239048239482394829348;
+
+const firstNumber = Number(String(num).at(0));
+const lastNumber = Number(String(num).at(-1));
+
+const sum = firstNumber + lastNumber;
+
+console.log('firstNumber:', firstNumber);
+console.log('lastNumber:', lastNumber);
+console.log('sum:', sum);
+```
+
+3) Через индексы строк
+```javascript
+const num = 123;
+
+const numStr = String(num);
+const firstNumber = Number(numStr[0]);
+const lastNumber = Number(numStr[numStr.length - 1]);
+const sum = firstNumber + lastNumber;
+```
+
+4) Деструктуризация
+Минусы: избыточность (создаёт массив rest), медленее предыдущих вариантов
+```javascript
+const num = 123;
+
+const [first, ...rest] = String(num);
+const last = rest[rest.length - 1];
+const sum = Number(first) + Number(last);
+
+console.log('first :>> ', first); // 1
+console.log('rest :>> ', rest); // ['2', '3']
+console.log('sum :>> ', sum); // 4
+```
+
+### Объединение массивов
+1) spread operator
+```javascript
+const arr1 = [1, 2, 3];
+const arr2 = [4, 5, 6];
+
+const combined = [...arr1, ...arr2]; // [1, 2, 3, 4, 5, 6]
+```
+
+### Объединение объектов
+1) spread operator
+```javascript
+const obj1 = { a: 1, b: 2 };
+const obj2 = { c: 3 };
+const merged = {...obj1, ...obj2}; // {a: 1, b: 2, c: 3}
+```
+
+### Найти максимальный элемент в массиве чисел
+1) spread operator
+```javascript
+const numbers = [13, 2, 3];
+console.log('...numbers :>> ', ...numbers); // 13 2 3
+console.log(Math.max(...numbers)); // 3
+```
+
+### Создание поверхностной копии объекта
+1) spread operator
+```javascript
+const original = [1, 2, 3];
+const copy = [...original]; // [1, 2, 3]
+```
+
+### Функция подсчёта суммы элементов массива
+1) spread operator
+```javascript
+function sum(...args) {
+  return args.reduce((a, b) => a + b, 0);
+}
+
+console.log(sum(1, 2, 3, 4));
+```
+
+### Создать массив от 1 до указанного количества элементов по порядку
+```javascript
+const result = Array.from({ length: 5 }, (_, i) => i + 1); // [1, 2, 3, 4, 5]
+```
+
+### Создать массив квадратов чисел от 0 до 4
+```javascript
+Array.from({ length: 5 }, (_, i) => i ** 2); // [0, 1, 4, 9, 16]
+```
+
+### Заполнить массив строкой
+```javascript
+Array.from({ length: 3 }, () => 'x'); // ['x', 'x', 'x']
+```

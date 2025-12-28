@@ -1,9 +1,2 @@
-let numb = 20;
-
-function isEven(n) {
-    if (n === 0) return true;
-    if (n === 1) return false;
-    return isEven(Math.abs(n) - 2);
-}
-
-console.log(isEven(numb) ? 'чётное' : 'нечётное');
+const result = Array.from({ length: 3 }, () => 'x'); // [1, 2, 3, 4, 5]
+console.log('result :>> ', result);
