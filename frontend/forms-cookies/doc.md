@@ -281,3 +281,133 @@ Array.from(document.forms).forEach((form, index) => {
   });
 });
 ```
+
+## Основы создания элементов формы
+Формы в веб-разработке используются для сбора данных от пользователей. Они создаются с помощью специального тега `<form>`, внутри которого располагаются элементы управления (inputs, buttons, selects, etc). Каждый элемент имеет атрибуты для настройки поведения, типа данных и валидации. Основные элементы:
+
+- input: универсальный элемент для ввода данных (текст, пароль, чекбоксы, радиокнопки). Атрибут type определяет тип (email, submit, text, password, file, number, checkbox, radio, date, hidden);
+- textarea: для многострочного текста;
+- select: выпадающий список с опциями (`<option>`);
+- button: кнопка для отправки формы или действий;
+- label: связывает текст с элементом формы для улучшения доступности.
+
+Атрибуты формы: `action` (URL для отправки), `method` (GET/POST), `name` (идентификатор для данных). Валидация может быть встроенной (атрибуты как required, pattern) или через JavaScript.
+
+**Типы полей input**
+- text
+- password
+- email
+- number
+- checkbox
+- radio
+- file
+- date (выбор данных через календарь)
+- hidden (скрытое поле; не видно, но отправляется с формой)
+
+**Ключевые атрибуты input**
+- name: имя поля (сервер использует его для идентификации данных);
+- value: значение по умолчанию;
+- title: всплывающая подсказка при наведении курсора;
+- placeholder: подсказка внутри поля (исчезает при вводе);
+- required: делает поле обязательным для заполнения;
+- readonly: поле видно, но нельзя редактировать;
+- disabled: поле отключено (не отправляется с формой);
+- maxlength - ограничивает количество символов;
+- autocomplete: подсказывает браузеру, какие данные ожидать (например, name или email);
+- autocapitalize - управляет заглавными буквами на мобильных клавиатурах.
+
+### Атрибут pattern (input)**
+`pattern` задаёт регулярное выражение (regex), которому должен соответствовать ввод пользователя. Если данные не подходят под шаблон, браузер не позволит отправить форму и покажет ошибку.
+
+Синтаксис
+```html
+<input type="text" pattern="regex" title="сообщение об ошибке">
+```
+
+**Создание шаблонов**
+- [0-9] - любая цифра
+- [A-Za-z] - любая латинская буква;
+- {3} - ровно 3 символа
+- {2,5} - от 2 до 5 символов;
+- ^\d{3}-\d{2}$ - формат "три цифры-две цифры" (например, 123-45).
+
+**Примеры использования**
+- Телефон: `pattern="\+7\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}"` (формат +7 (XXX) XXX-XX-XX);
+- Пароль из 6-12 символов: `pattern=".{6,12}"`;
+- Почтовый индекс (6 цифр): `pattern="\d{6}"`
+
+**Пример. Поле для трёхбуквенного кода страны:**
+```html
+<input
+  type="text"
+  pattern="[A-Za-z]{3}"
+  title="Введите три буквы (например, RUS)"
+  placeholder="Код страны"
+>
+```
+
+**Нюансы**
+1. pattern работает только с input
+2. атрибут title отображает пользователю подсказку об ошибке
+3. браузер проводит проверку автоматически - дополнительный JS не нужен
+4. для кириллицы нужно использовать [А-Яа-яЁё]
+5. шаблон применяется только при отправке формы (ввод посимвольно не блокируется)
+
+
+### Примеры
+
+**Валидация формы на JavaScript**
+```html
+<form id="regForm" action="/submit" method="post">
+  <!-- Поля как в примере 1 -->
+  <label for="name">Имя:</label>
+  <input type="text" id="name" name="name" required><br><br>
+  
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email" required><br><br>
+  
+  <label for="password">Пароль:</label>
+  <input type="password" id="password" name="password" minlength="8" required><br><br>
+  
+  <button type="submit">Зарегистрироваться</button>
+</form>
+
+<script>
+  document.getElementById('regForm').addEventListener('submit', function(event) {
+    const password = document.getElementById('password').value;
+    if (!/\d/.test(password)) {  // Проверка на наличие цифры
+      alert('Пароль должен содержать хотя бы одну цифру!');
+      event.preventDefault();  // Отменяет отправку
+    }
+  });
+</script>
+```
+
+**Динамическое обновление опций в select**
+```html
+<form id="feedbackForm" action="/feedback" method="post">
+  <!-- Поля как в примере 3 -->
+  <label for="topic">Тема:</label>
+  <select id="topic" name="topic" required>
+    <option value="">Выберите тему</option>
+    <option value="bug">Ошибка</option>
+  </select><br><br>
+  
+  <button type="button" id="addOption">Добавить тему "Предложение"</button><br><br>
+  
+  <label for="message">Сообщение:</label><br>
+  <textarea id="message" name="message" rows="4" cols="50" required></textarea><br><br>
+  
+  <button type="submit">Отправить</button>
+</form>
+
+<script>
+  document.getElementById('addOption').addEventListener('click', function() {
+    const select = document.getElementById('topic');
+    const newOption = document.createElement('option');
+    newOption.value = 'feature';
+    newOption.textContent = 'Предложение';
+    select.appendChild(newOption);
+  });
+</script>
+```

@@ -9,72 +9,27 @@
     <title>Document</title>
   </head>
   <body>
-    <form action="" id="contactForm" name="contactForm" method="post">
-      <!-- name служит идентификатором формы при отправке данных на сервер -->
-      <fieldset>
-        <legend>Личные данные</legend>
-        <div class="contactForm__name">
-          <label for="name">Имя:</label>
-          <input type="text" id="name" name="name" value="igor" placeholder="Имя..." required/>
-        </div>
-        <div class="contactForm__email">
-          <label for="email">Email:</label>
-          <input type="email" id="email" name="email" value="xx@xx.xx" placeholder="Email..." required/>
-        </div>
-        <div class="contactForm__genderGroup" aria-labelledby="gender-label">
-          <label id="gender-label">Пол:</label>
-          <input type="radio" id="male" name="gender" value="male" />
-          <!-- Атрибут name объединяет радиокнопки в группу -->
-          <label for="male">Мужской</label>
-          <input type="radio" id="female" name="gender" value="female" />
-          <!-- Атрибут name объединяет радиокнопки в группу -->
-          <label for="female">Женский</label>
-        </div>
+    <form id="feedbackForm" action="/feedback" method="post">
+      <!-- Поля как в примере 3 -->
+      <label for="topic">Тема:</label>
+      <select id="topic" name="topic" required>
+        <option value="">Выберите тему</option>
+        <option value="bug">Ошибка</option></select
+      ><br /><br />
 
-        <div class="contactForm__country">
-          <label for="country">Страна</label>
-          <select id="country" name="country">
-            <option value="" selected disabled hidden>Укажите страну</option>
-            <option value="us">США</option>
-            <option value="ru">Россия</option>
-            <option value="de">Германия</option>
-          </select>
-        </div>
+      <button type="button" id="addOption">Добавить тему "Предложение"</button
+      ><br /><br />
 
-        <div class="contactForm__messages">
-          <label for="message">Сообщение:</label>
-          <textarea
-            name="message"
-            id="message"
-            rows="4"
-            cols="50"
-            placeholder="Введите текст..."
-          ></textarea>
-        </div>
-        <!-- 
-        <div id="gender-group">
-            <label for="male">Пол:</label>
-            <input type="radio" id="male" name="gender" , value="male" />
-            <label for="male">Мужской</label>
-            <input type="radio" id="female" name="gender" value="female" />
-            <label for="female">Женский</label>
-        </div> -->
-      </fieldset>
+      <label for="message">Сообщение:</label><br />
+      <textarea
+        id="message"
+        name="message"
+        rows="4"
+        cols="50"
+        required
+      ></textarea
+      ><br /><br />
 
-      <fieldset>
-        <legend>Интересы</legend>
-        <div class="contactForm__interests">
-          <input type="checkbox" id="sports" name="interests" value="sports" />
-          <label for="sports">Спорт</label>
-          <input type="checkbox" id="music" name="interests" value="music" />
-          <label for="music">Музыка</label>
-        </div>
-      </fieldset>
-      <button type="submit">Отправить</button>
-    </form>
-
-    <form action="" id="surveyForm" name="surveyForm">
-      <input type="email" name="email" />
       <button type="submit">Отправить</button>
     </form>
   </body>
