@@ -9,8 +9,7 @@
     <title>Document</title>
   </head>
   <body>
-    <form id="feedbackForm" action="/feedback" method="post">
-      <!-- Поля как в примере 3 -->
+    <!-- <form id="feedbackForm" action="/feedback" method="post">
       <label for="topic">Тема:</label>
       <select id="topic" name="topic" required>
         <option value="">Выберите тему</option>
@@ -31,6 +30,68 @@
       ><br /><br />
 
       <button type="submit">Отправить</button>
+    </form> -->
+
+    <form action="" id="myForm">
+      <fieldset>
+        <legend>Личные данные</legend>
+        <label class="field field--email" for="email">
+          <span class="label-text label-text--email">Email</span>
+          <input type="email" id="email" placeholder="email" />
+        </label>
+
+        <label class="field field--phone" for="phone">
+          <span class="label-text label-text--phone">Phone</span>
+          <input
+            type="text"
+            id="phone"
+            placeholder="Phone: +7 (XXX) XXX-XX-XX"
+          />
+        </label>
+
+        <label class="field field--password" for="password">
+          <span class="label-text label-text--password">Password</span>
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter password..."
+          />
+        </label>
+      </fieldset>
+      <button type="submit">Submit</button>
     </form>
+
+    <script>
+      document
+        .getElementById("myForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const email = document.getElementById("email").value;
+          const phone = document.getElementById("phone").value;
+          const password = document.getElementById("password").value;
+
+          if (!validateEmail(email)) alert("Invalid email");
+          else if (!validatePhone(phone)) alert("Invalid phone");
+          else if (!validatePassword(password)) alert("Invalid password");
+          else alert("Form submitted successfully");
+        });
+
+      function validateEmail(email) {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+      }
+
+      function validatePhone(phone) {
+        const regex = /^\+7\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/;
+        return regex.test(phone);
+      }
+
+      function validatePassword(password) {
+        const regex =
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        return regex.test(password);
+      }
+    </script>
   </body>
 </html>

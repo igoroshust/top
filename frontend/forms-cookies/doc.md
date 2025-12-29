@@ -241,8 +241,8 @@ form.addEventListener("submit", function (event) {
   // Для чекбоксов: перебираем коллекцию и собираем отмеченные значения
   const interestsElements = form.elements["interests"]; // Коллекция чекбоксов
   const interests = Array.from(interestsElements) // Преобразуем в массив
-    .filter(checkbox => checkbox.checked) // Оставляем только отмеченные
-    .map(checkbox => checkbox.value); // Берём их значения
+    .filter((checkbox) => checkbox.checked) // Оставляем только отмеченные
+    .map((checkbox) => checkbox.value); // Берём их значения
 
   console.log("name :>> ", name);
   console.log("email :>> ", email);
@@ -283,6 +283,7 @@ Array.from(document.forms).forEach((form, index) => {
 ```
 
 ## Основы создания элементов формы
+
 Формы в веб-разработке используются для сбора данных от пользователей. Они создаются с помощью специального тега `<form>`, внутри которого располагаются элементы управления (inputs, buttons, selects, etc). Каждый элемент имеет атрибуты для настройки поведения, типа данных и валидации. Основные элементы:
 
 - input: универсальный элемент для ввода данных (текст, пароль, чекбоксы, радиокнопки). Атрибут type определяет тип (email, submit, text, password, file, number, checkbox, radio, date, hidden);
@@ -294,6 +295,7 @@ Array.from(document.forms).forEach((form, index) => {
 Атрибуты формы: `action` (URL для отправки), `method` (GET/POST), `name` (идентификатор для данных). Валидация может быть встроенной (атрибуты как required, pattern) или через JavaScript.
 
 **Типы полей input**
+
 - text
 - password
 - email
@@ -305,6 +307,7 @@ Array.from(document.forms).forEach((form, index) => {
 - hidden (скрытое поле; не видно, но отправляется с формой)
 
 **Ключевые атрибуты input**
+
 - name: имя поля (сервер использует его для идентификации данных);
 - value: значение по умолчанию;
 - title: всплывающая подсказка при наведении курсора;
@@ -316,15 +319,18 @@ Array.from(document.forms).forEach((form, index) => {
 - autocomplete: подсказывает браузеру, какие данные ожидать (например, name или email);
 - autocapitalize - управляет заглавными буквами на мобильных клавиатурах.
 
-### Атрибут pattern (input)**
+### Атрибут pattern (input)\*\*
+
 `pattern` задаёт регулярное выражение (regex), которому должен соответствовать ввод пользователя. Если данные не подходят под шаблон, браузер не позволит отправить форму и покажет ошибку.
 
 Синтаксис
+
 ```html
-<input type="text" pattern="regex" title="сообщение об ошибке">
+<input type="text" pattern="regex" title="сообщение об ошибке" />
 ```
 
 **Создание шаблонов**
+
 - [0-9] - любая цифра
 - [A-Za-z] - любая латинская буква;
 - {3} - ровно 3 символа
@@ -332,82 +338,327 @@ Array.from(document.forms).forEach((form, index) => {
 - ^\d{3}-\d{2}$ - формат "три цифры-две цифры" (например, 123-45).
 
 **Примеры использования**
+
 - Телефон: `pattern="\+7\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}"` (формат +7 (XXX) XXX-XX-XX);
 - Пароль из 6-12 символов: `pattern=".{6,12}"`;
 - Почтовый индекс (6 цифр): `pattern="\d{6}"`
 
 **Пример. Поле для трёхбуквенного кода страны:**
+
 ```html
 <input
   type="text"
   pattern="[A-Za-z]{3}"
   title="Введите три буквы (например, RUS)"
   placeholder="Код страны"
->
+/>
 ```
 
 **Нюансы**
+
 1. pattern работает только с input
 2. атрибут title отображает пользователю подсказку об ошибке
 3. браузер проводит проверку автоматически - дополнительный JS не нужен
 4. для кириллицы нужно использовать [А-Яа-яЁё]
 5. шаблон применяется только при отправке формы (ввод посимвольно не блокируется)
 
-
 ### Примеры
 
 **Валидация формы на JavaScript**
+
 ```html
 <form id="regForm" action="/submit" method="post">
   <!-- Поля как в примере 1 -->
   <label for="name">Имя:</label>
-  <input type="text" id="name" name="name" required><br><br>
-  
+  <input type="text" id="name" name="name" required /><br /><br />
+
   <label for="email">Email:</label>
-  <input type="email" id="email" name="email" required><br><br>
-  
+  <input type="email" id="email" name="email" required /><br /><br />
+
   <label for="password">Пароль:</label>
-  <input type="password" id="password" name="password" minlength="8" required><br><br>
-  
+  <input
+    type="password"
+    id="password"
+    name="password"
+    minlength="8"
+    required
+  /><br /><br />
+
   <button type="submit">Зарегистрироваться</button>
 </form>
 
 <script>
-  document.getElementById('regForm').addEventListener('submit', function(event) {
-    const password = document.getElementById('password').value;
-    if (!/\d/.test(password)) {  // Проверка на наличие цифры
-      alert('Пароль должен содержать хотя бы одну цифру!');
-      event.preventDefault();  // Отменяет отправку
-    }
-  });
+  document
+    .getElementById("regForm")
+    .addEventListener("submit", function (event) {
+      const password = document.getElementById("password").value;
+      if (!/\d/.test(password)) {
+        // Проверка на наличие цифры
+        alert("Пароль должен содержать хотя бы одну цифру!");
+        event.preventDefault(); // Отменяет отправку
+      }
+    });
 </script>
 ```
 
 **Динамическое обновление опций в select**
+
 ```html
 <form id="feedbackForm" action="/feedback" method="post">
   <!-- Поля как в примере 3 -->
   <label for="topic">Тема:</label>
   <select id="topic" name="topic" required>
     <option value="">Выберите тему</option>
-    <option value="bug">Ошибка</option>
-  </select><br><br>
-  
-  <button type="button" id="addOption">Добавить тему "Предложение"</button><br><br>
-  
-  <label for="message">Сообщение:</label><br>
-  <textarea id="message" name="message" rows="4" cols="50" required></textarea><br><br>
-  
+    <option value="bug">Ошибка</option></select
+  ><br /><br />
+
+  <button type="button" id="addOption">Добавить тему "Предложение"</button
+  ><br /><br />
+
+  <label for="message">Сообщение:</label><br />
+  <textarea id="message" name="message" rows="4" cols="50" required></textarea
+  ><br /><br />
+
   <button type="submit">Отправить</button>
 </form>
 
 <script>
-  document.getElementById('addOption').addEventListener('click', function() {
-    const select = document.getElementById('topic');
-    const newOption = document.createElement('option');
-    newOption.value = 'feature';
-    newOption.textContent = 'Предложение';
+  document.getElementById("addOption").addEventListener("click", function () {
+    const select = document.getElementById("topic");
+    const newOption = document.createElement("option");
+    newOption.value = "feature";
+    newOption.textContent = "Предложение";
     select.appendChild(newOption);
   });
+</script>
+```
+
+## Проверка достоверности данных форм
+
+Валидация данных формы - это процесс проверки введённых пользователем данных на соответствие определённым правилам перед отправкой на сервер. Это помогает предотвратить ошибки, улучшить пользовательский опыт и защитить от вредоносного ввода. В JS регулярные выражения часто используются для валидации, так как они позволяют гибко описывать паттерны строк.
+
+Регулярные выражения - это формальный язык для поиска и обработки текстовых данных по заданным шаблонам.
+
+Регулярные выражения представлены объектов RegExp в JS. Они могут быть созданы двумя способами:
+
+- Литерально: `pattern/flags` (например, `/abc/i`);
+```javascript
+const regex = /hello/i; // Создаёт regex для поиска "hello" без учёта регистра
+console.log(regex.test("Hello World")); // true
+```
+- Через конструктор: `new RegExp('pattern', 'flags')` (например, `new RegExp('abc', 'i')`).
+```javascript
+const pattern = 'hello';
+const flags = 'i';
+const regex = new RegExp(pattern, flags); // Создаёт regex из переменных
+console.log(regex.test("HELLO World")); // true
+```
+
+**Флаги**
+
+- i игнорирует регистр
+- g глобальный поиск (находит все совпадения)
+- m многострочный режим
+
+### Правила записи
+
+Регулярные выражения состоят из литералов (обычных символов) и специальных символов (метасимволов). Основные правила:
+
+**Метасимволы**
+
+- `.` - любой символ, кроме новой строки
+- `\d` - цифра (0-9)
+- `\w` - буква, цифра или подчёркивание
+- `\s` - пробельный символ (пробел, табуляция, новая строка)
+- `\b` - граница слева
+- `^` - начало строки
+- `$` - конец строки
+
+**Квантификаторы (указывают количество повторений)**
+Квантификатор - это символ (или конструкция), указывающий количество повторений предыдущего символа.
+- `*` - 0 или более
+- `+` - 1 или более
+- `?` - 0 или 1
+- `{n}` - ровно n раз.
+- `{n,}` - n или более
+- `{n, m}` - от n до m раз
+
+**Группы и альтернативы**
+
+- `(abc)` - группа символов
+- `(a|b)` - альтернатива (а или b)
+- `[abc]` - любой символ из набора (a, b или c)
+- `[^abc]` - любой символ, кроме a, b, c
+
+**Экранирование**
+Специальные символы экранируются обратным слешем: `\.`, `\+`, `\$` и т.д.
+Пример простого regex: `/^\d{3}-\d{2}-\d{4}$/` - проверяет формат SSN (123-45-6789).
+
+### Методы объектов String для работы с регулярными выражениями
+
+Эти методы вызываются на строке и принимают regex в качестве аргумента.
+
+- `match(regex)`: возвращает массив совпадений или null. С флагом `g` - все совпадения.
+
+```javascript
+const str = "Hello 123 world 456 42";
+const matches = str.match(/\d+/g); // ['123', '456', '42']
+```
+
+- `replace(regex, replacement)`: заменяет совпадения на строку или функцию.
+
+```javascript
+const str = "My phone is 123-456-7890";
+const result = str.replace(/\d{3}-\d{3}-\d{4}/, "XXX-XXX-XXXX"); // My phone is XXX-XXX-XXXX
+```
+
+- `search(regex)`: возвращает индекс первого совпадения или -1.
+
+```javascript
+const str = "Find the number 42";
+const index = str.search(/\d+/); // 15
+```
+
+- `split(regex)`: разделяет строку на массив по совпадениям
+
+```javascript
+const str = "apple, orange; banana";
+const parts = str.split(/[,;]\s*/); // ["apple", "orange", "banana"]
+```
+
+### Методы объектов RegExp для работы с регулярными выражениями
+
+Эти методы вызываются на объекте RegExp
+
+- `test(string)`: возвращает true, если есть совпадение, иначе false. Не изменяет состояние regex.
+
+```javascript
+const regex = /^\w+@\w+\.\w+$/;
+console.log(regex.test("user@example.com")); // true
+console.log(regex.test("invalid-email")); // false
+```
+
+- `exec(string)`: возвращает массив с совпадением и группами или null. С флагом `g` - последующие вызовы находят следующие совпадения.
+
+```javascript
+const regex = /(\d{2})-(\d{2})-(\d{4})/;
+const match = regex.exec("Date: 12-31-2023"); // ["12-31-2023", "12", "31", "2023"]
+```
+
+### Практические примеры валидации данных формы
+
+1. Валидация email
+
+```javascript
+function validateEmail(email) {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
+
+// Пример использования
+console.log(validateEmail("user@example.com")); // true
+console.log(validateEmail("invalid@.com")); // false
+```
+
+2. Валидация номера телефона
+
+```javascript
+function validatePhone(phone) {
+  const regex = /^\+7\s\$\d{3}\$\s\d{3}-\d{2}-\d{2}$/;
+  return regex.test(phone);
+}
+
+// Пример
+console.log(validatePhone("+7 (123) 456-78-90")); // true
+console.log(validatePhone("123-456-7890")); // false
+```
+
+3. Валидация пароля
+
+```javascript
+function validatePassword(password) {
+  const regex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  return regex.test(password);
+}
+
+console.log(validatePassword("Passw0rd!")); // true
+console.log(validatePassword("password")); // false (нет заглавной, цифры, спецсимвола)
+```
+
+Комментарии
+
+1. `(?=.*[a-z])` - содержит хотя бы 1 строчную букву (a-z): проверяет, что где-то в строке есть строчная буква (a-z)
+
+- `.*` - любые символы (0 или больше)
+- `a-z` - одна строчная буква
+
+2. `(?=.*[A-Z])` - содержит хотя бы 1 прописную букву (A-Z)
+3. `(?=.*\d)` - содержит хотя бы 1 цифру (\d)
+4. `(?=.*[@$!%*?&])` - содержит хотя бы один специальный символ из набора (@$!%\*?&)
+5. `{8,}` - длина не менее 8 символов
+6. Состоять только из разрешённых символов (A-Za-z, \d, @$!%\*?&)
+7. `(?=...)` - положительный опережающий просмотр (positive lookahead). `=` внутри - часть синтаксиса lookahead, не является отдельным оператором.
+
+**Как работает lookahead**
+`(?=шаблон)` проверяет, есть ли в строке подстрока, соответствующая шаблону, начиная с текущей позиции. Если совпадение найдено - условие считается выполненым, и движок регулярных выражений возвращается на исходную позицию (не продвигается по строке). Если совпадения нет - всё выражение не срабатывает. Важно, что lookahead не захватывает символы - он только проверяет их наличие. Lookahead-проверки идут в начале - они гарантируют наличие обязательных символов где-то в строке.
+
+Это как бы механизм (утверждение), которое "заглядывает вперёд", проверяя, строку на предмет соответствия шаблону. Порядок важен.
+
+**Итоговый пример формы с валидацией**
+HTML + JS
+```html
+<form action="" id="myForm">
+  <fieldset>
+    <legend>Личные данные</legend>
+    <label class="field field--email" for="email">
+      <span class="label-text label-text--email">Email</span>
+      <input type="email" id="email" placeholder="email" />
+    </label>
+
+    <label class="field field--phone" for="phone">
+      <span class="label-text label-text--phone">Phone</span>
+      <input type="text" id="phone" placeholder="Phone: +7 (XXX) XXX-XX-XX" />
+    </label>
+
+    <label class="field field--password" for="password">
+      <span class="label-text label-text--password">Password</span>
+      <input type="password" id="password" placeholder="Enter password..." />
+    </label>
+  </fieldset>
+  <button type="submit">Submit</button>
+</form>
+
+<script>
+  document
+    .getElementById("myForm")
+    .addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const phone = document.getElementById("phone").value;
+      const password = document.getElementById("password").value;
+
+      if (!validateEmail(email)) alert("Invalid email");
+      else if (!validatePhone(phone)) alert("Invalid phone");
+      else if (!validatePassword(password)) alert("Invalid password");
+      else alert("Form submitted successfully");
+    });
+
+  function validateEmail(email) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  }
+
+  function validatePhone(phone) {
+    const regex = /^\+7\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/;
+    return regex.test(phone);
+  }
+
+  function validatePassword(password) {
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(password);
+  }
 </script>
 ```
