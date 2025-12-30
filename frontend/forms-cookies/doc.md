@@ -442,14 +442,17 @@ Array.from(document.forms).forEach((form, index) => {
 Регулярные выражения представлены объектов RegExp в JS. Они могут быть созданы двумя способами:
 
 - Литерально: `pattern/flags` (например, `/abc/i`);
+
 ```javascript
 const regex = /hello/i; // Создаёт regex для поиска "hello" без учёта регистра
 console.log(regex.test("Hello World")); // true
 ```
+
 - Через конструктор: `new RegExp('pattern', 'flags')` (например, `new RegExp('abc', 'i')`).
+
 ```javascript
-const pattern = 'hello';
-const flags = 'i';
+const pattern = "hello";
+const flags = "i";
 const regex = new RegExp(pattern, flags); // Создаёт regex из переменных
 console.log(regex.test("HELLO World")); // true
 ```
@@ -476,6 +479,7 @@ console.log(regex.test("HELLO World")); // true
 
 **Квантификаторы (указывают количество повторений)**
 Квантификатор - это символ (или конструкция), указывающий количество повторений предыдущего символа.
+
 - `*` - 0 или более
 - `+` - 1 или более
 - `?` - 0 или 1
@@ -607,6 +611,7 @@ console.log(validatePassword("password")); // false (нет заглавной, 
 
 **Итоговый пример формы с валидацией**
 HTML + JS
+
 ```html
 <form action="" id="myForm">
   <fieldset>
@@ -662,3 +667,258 @@ HTML + JS
   }
 </script>
 ```
+
+## Cookies
+
+Cookies (куки) - это небольшие текстовые файлы, которые веб-сайты сохраняют на устройстве пользователя (компьютере, смартфоне или планшете). Они используются для хранения информации о пользователе, такой как предпочтения, данные сессии, корзина покупок или идентификаторы для аутентификации. Cookies отправляются браузером на сервер при каждом запросе к сайту, что позволяет сайту "запомнить" пользователя.
+
+Cookies используются для хранения данных, которые браузер отправляет на сервер с каждым запросом к домену.
+
+В контексте JS cookies управляются через объект `document.cookie`. Это API бразуера, которое позволяет читать, устанавливать и удалять cookies. Cookies не являются частью языка JS, но JS предоставляет интерфейс для работы с ними. Важно: cookies могут быть установлены только для домена, с которого загружается страница, и имеют ограничения по размеру (обычно до 4 КБ на cookie).
+
+Cookies делятся на типы:
+
+- **Сессионные**: существуют только во время сессии браузера (удаляются при закрытии).
+- **Постоянные**: Имеют срок действия (expires) и хранятся дольше.
+- **HttpOnly**: Доступны только серверу, не JS (для безопасности).
+- **Secure**: Передаются только по HTTPS.
+
+### Работа с cookie
+
+Для работы с cookies используется свойство `document.cookie`. Оно возвращает строку всех cookies для текущего домена в формате `name=value; name2=value2;...`. Установка cookie происходит путём присваивания строки в формате `name=value; options`.
+
+Cookies полезны для аутентификации (например, session ID), персонализации (предпочтения) и трекинга (аналитика), но не для больших данных.
+
+**Основные операции**
+
+- Установка cookie: `document.cookie = "name=value; expires=дата; path=/ domain=example.com; secure; samesite=strict";`
+- Чтение cookie: парсинг строки `document.cookie`
+- Удаление cookie: установка истекшей датой.
+
+### Практические примеры
+
+1. Установка cookies
+
+```javascript
+// Функция для установки cookie
+function setCookie(name, value, days) {
+  const date = new Date();
+  date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000); // Срок в днях
+  console.log("date :>> ", date); // Tue Jan 06 2026 14:42:58 GMT+0900 (Якутск, стандартное время)
+
+  const expires = "expires=" + date.toUTCString(); // expires=Tue, 06 Jan 2026 05:43:13 GMT
+  console.log("expires :>> ", expires);
+
+  // В DevTools проверяем срок действия во вкладке "Приложение", в колонке "Expires / Max-Age"
+
+  document.cookie = `${name}=${value}; ${expires}; path=/`;
+  console.log(document.cookie.includes("username=JohnDoe")); // true
+}
+
+setCookie("username", "JohnDoe", 3);
+```
+
+Комментарии:
+
+1. `date.setTime()` - устанавливаем новое время для объекта date;
+2. `date.getTime()` - получаем текущее время в миллисекундах;
+3. `(days * 24 * 60 * 60 * 1000)` - вычисляет количество миллисекунд в указанном числе дней (24 часа x 60 минут x 60 секунд x 1000мс). В итоге сумма даёт будущее время, на которое истекает куки.
+4. `const expires = "expires=" + date.toUTCString()`. Формируется строка expires с датой истечения куки в формате UTC (стандартный формат для HTTP-заголовков).
+5. Получение cookie
+
+```javascript
+function getCookie(name) {
+  const nameEQ = `${name}=`;
+  const ca = document.cookie.split(";"); // ['username=JohnDoe']
+
+  for (let i = 0; i < ca.length; i++) {
+    // Перебираем каждую подстроку (потенциальное куки) из списка
+    console.log("ca.length :>> ", ca.length); // 1
+
+    let c = ca[i]; // username=JohnDoe (текущая подстрока)
+
+    console.log("c.charAt(0) :>> ", c.charAt(0)); // u
+    console.log("c.substring(1, c.length) :>> ", c.substring(1, c.length)); // sername=JohnDoe
+    console.log("c.indexOf(nameEQ) :>> ", c.indexOf(nameEQ)); // 0 (позиция, где найден шаблон)
+    console.log(
+      "c.substring(nameEQ.length, c.length) :>> ",
+      c.substring(nameEQ.length, c.length)
+    ); // JohnDoe
+
+    while (c.charAt(0) === " ") c = c.substring(1, c.length); // Удаляем пробел в начале строки (обрезаем строку, удаляя первый символ)
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
+
+const username = getCookie("username");
+console.log(username);
+```
+
+3. Удаление cookie
+   Удаление cookie происходит путём установки истекшей даты (expires в прошлом) или max-age=0. Удаление происходит только для указанного path и domain.
+
+```javascript
+function deleteCookie(name) {
+  document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+}
+
+deleteCookie("username");
+```
+
+3.1 Улучшенная версия удаления cookie
+
+```javascript
+function deleteCookie(name, path = "/", domain = "") {
+  document.cookie =
+    `${name}=;` +
+    `expires=Thu, 01 Jan 1970 00:00:00 UTC;` +
+    `path=${path};` +
+    (domain ? `domain=${domain};` : "") +
+    "secure"; // если куки был с флагом secure
+}
+```
+
+3.2 Удаление всех cookies (для домена):
+
+```javascript
+function deleteAllCookies() {
+  const cookies = document.cookie.split("; ");
+  console.log("cookies :>> ", cookies);
+
+  for (let cookie of cookies) {
+    console.log("cookie :>> ", cookie); // username=igoroshust
+    const eqPos = cookie.indexOf("="); // Индекс начала '=' (для изъятия имени)
+
+    const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+    console.log("name :>> ", name); // username
+    console.log("cookie.substr(0, eqPos) :>> ", cookie.substring(0, eqPos)); // username
+    document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+  }
+}
+
+deleteAllCookies();
+```
+
+4. Установка cookie с дополнительными атрибутами
+   Добавляем атрибуты для безопасности: `secure` (только HTTPS), `samesite=strict` (Защита от CSRF).
+
+```javascript
+function setSecureCookie(name, value, days) {
+  const date = new Date();
+  date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+  const expires = "expires=" + date.toUTCString();
+  // Атрибуты: path=/ (доступно для всего сайта), secure (только HTTPS), samesite=strict
+  document.cookie =
+    name +
+    "=" +
+    encodeURIComponent(value) +
+    ";" +
+    expires +
+    ";path=/;secure;samesite=strict";
+}
+
+// Пример: Сохранение предпочтений пользователя
+setSecureCookie("theme", "dark", 30);
+```
+
+Комментарии:
+
+1. `encodeURIComponent` используется для кодирования значения, чтобы избежать проблем со специальными символами. Кодирует значение куки для безопасной передачи в HTTP-заголовке `Set-Cookie`. Необходимость: значения куки могут содержать (пробелы, спецсимволы, не-ASCII символы вроде кириллицы, эмодзи и тд), и без кодирования браузер может некорректно интерпретировать значение + возможны ошибки парсинга (например, символ `;` разорвёт строку куки) + риски XSS-атак, если значение содержит вредоносный код.
+   Без кодирования:
+
+```javascript
+document.cookie = "theme=dark;blue"; // ;blue будет траковаться как новый параметр cookie!
+```
+
+С кодированием:
+
+```javascript
+const value = encodeURIComponent("dark;blue"); // "dark%3Bblue"
+document.cookie = "theme=" + value; // корректно: значение = "dark;blue
+```
+
+encodeURIComponent гарантирует, что любое значение (включая спецсимволы и Unicode) будет передано без искажений.
+
+2. `SameSite=Strict` - защита от CSRF-атак (межсайтовой подделки запросов). Параметр определяет, когда браузер отправляет куки вместе с запросом.
+
+- Strict - куки не отправляются при переходах с других сайтов (например, пользователь перешёл по ссылке `example.com` из письма -> куки не прикрепляются к запросу). Максимальная безопасность, но может ломать функционал (например, платёжные редиректы).
+- Lax (рекомендуемый баланс). Куки отправляются только для "безопасных" методов (GET, HEAD, OPTIONS, TRACE) при переходе с другого сайта. Не отправляются для POST-запросов извне. Подходит для большинства сценариев.
+- None. Куки отправляются всегда, даже при межсайтовых запросах. Требуется secure (только HTTPS). Риск CSRF, если не продумана защита.
+
+**Пример-5. Работа с несколькими cookies (корзина покупок)**
+Представим простую корзину: сохраняем товары в cookie как JSON
+
+```javascript
+function addToCart(item) {
+  let cart = getSecureCookie("cart");
+  cart = cart ? JSON.parse(decodeURIComponent(cart)) : [];
+  cart.push(item);
+  setSecureCookie("cart", JSON.stringify(cart), 1);
+}
+
+function getCart() {
+  const cart = getSecureCookie("cart");
+  return cart ? JSON.parse(decodeURIComponent(cart)) : [];
+}
+
+function setSecureCookie(
+  name,
+  value,
+  expireDays,
+  path = "/",
+  domain = "",
+  samesite = "strict"
+) {
+  const date = new Date();
+  date.setTime(date.getTime() + expireDays * 24 * 60 * 60 * 1000);
+  const expires = `expires=${date.toUTCString()}`;
+  document.cookie = `${name}=${encodeURIComponent(
+    value
+  )}; ${expires}; path=${path}; domain=${domain}; samesite=${samesite}`;
+}
+
+function getSecureCookie(name) {
+  const nameEQ = `${name}=`;
+  const cookiesArray = document.cookie.split(";");
+
+  for (let i = 0; i < cookiesArray.length; i++) {
+    let cookie = cookiesArray[i].trim();
+    if (cookie.indexOf(nameEQ) === 0) {
+      return cookie.substring(nameEQ.length);
+    }
+
+    //  if (cookie.indexOf(nameEQ) === 0) return decodeURIComponent(cookie.substring(nameEQ.length));
+  }
+  return null;
+}
+
+// Примеры использования
+// 1. Простая строка (без JSON.stringify)
+setSecureCookie("username", "igoroshust", 3);
+
+// 2. Объект (c JSON.stringify перед вызовом)
+addToCart({ name: "Apple", price: 0.5 });
+addToCart({ name: "Banana", price: 0.8 });
+
+// 3. Вывод корзины
+console.log(getCart());
+```
+
+**Дополнительно про куки**
+
+- Cookie с объектом (сериализация):
+
+```javascript
+const user = { id: 123, name: "Alice" };
+document.cookie = `user=${encodeURIComponent(
+  JSON.stringify(user)
+)}; expires=${new Date(Date.now() + 86400000).toUTCString()}; path=/`;
+```
+
+### Лучшие практики и ограничения
+- **Кодирование**: Всегда использовать `encodeURIComponent` для значений и `decodeURIComponent` при чтении.
+- **Безопасность**: Использовать `secure`, `samesite` и `httponly` для защиты. Не хранить пароли в cookies без httponly.
+- **Ограничения**: До 4 КБ на cookie, до 50 cookies на домен. Браузеры могут блокировать third-party cookies (например, в Safari)
+- **Альтернативы**: Для локального хранения без отправки на сервер использовать localStorage (постоянное) или sessionStorage (сессионное) хранилища. Они проще и не имеют лимитов размера.
+- **Тестирование**: В браузере открыть F12 > Application > Cookies для просмотра и редактирования.
