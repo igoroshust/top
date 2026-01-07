@@ -2,20 +2,32 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Run Python File",
+            "label": "Run JS",
             "type": "shell",
-            "command": "python",
-            "args": [
-                "D:/Applications/top/backend/good_python/main.py"
-            ],
-            "options": {
-                "cwd": "D:/Applications/top/backend"
-            },
+            "command": "node",
+            "args": ["\"${file}\""],
             "group": "build",
             "presentation": {
+                "echo": true,
                 "reveal": "always",
-                "clear": true
-            }
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run Python",
+            "type": "shell",
+            "command": "python",  // Замените на "python3", если у вас Python 3 установлен как python3
+            "args": ["-i", "\"${file}\""],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
         }
     ]
 }
