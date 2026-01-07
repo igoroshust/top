@@ -1,0 +1,21 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Python File",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "D:/Applications/top/backend/good_python/main.py"
+            ],
+            "options": {
+                "cwd": "D:/Applications/top/backend"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "clear": true
+            }
+        }
+    ]
+}
