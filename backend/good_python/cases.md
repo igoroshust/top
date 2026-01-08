@@ -23,3 +23,20 @@ id у всех будут разные
 - `copy.copy()` - нужно быстро скопировать простой список/словарь без вложенных изменяемых объектов (экономит память и время).
 - `copy.deepcopy()` - есть вложенные списки, словари или другие изменяемые объекты, и нужна полная изоляция.
 
+
+### ASCII значения латиницы и кириллицы
+```python
+print(
+    alphabet_upper := [{chr(i): i} for i in range(ord('A'), ord('Z')+1)],
+    alphabet_lower := [{chr(i): i} for i in range(ord('a'), ord('z')+1)],
+    alphabet_rus_upper := [{chr(i): i} for i in range(ord('А'), ord('я')+1)],
+    alphabet_rus_lower := [{chr(i): i} for i in range(ord('а'), ord('я')+1)],
+    sep='\n\n'
+)
+```
+
+### Отформатировать значение в строке
+```python
+digs = '1, 2,3,  4, 5,  6'
+digs.replace(" ", "").split(",")
+```
