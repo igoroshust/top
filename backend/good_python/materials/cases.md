@@ -91,3 +91,66 @@ else:
         
     print(f'Факториал {n}! = {p}')
 ```
+
+### Убрать пробел в начале строки (учебный пример)
+```python
+words = ["python", "язык", "программирования"]
+
+s = ''
+fl_first = True
+
+for w in words:
+    s += ('' if fl_first else ' ') + w
+    fl_first = False
+    
+print(s)
+```
+
+### Замена двухзначных чисел в списке на ноль
+```python
+digs = [4, 3, 100, -53, -30, 1, 34, -8, 42]
+
+for index in range(len(digs)):
+    # Если i - двухзначное число
+    if 10 <= abs(digs[index]) <= 99:
+        digs[index] = 0
+        
+print(digs)
+```
+
+Через enumarate
+```python
+digs = [4, 3, 100, -53, -30, 1, 34, -8, 42]
+
+for index, value in enumerate(digs):
+    # Если i - двухзначное число
+    if 10 <= abs(value) <= 99:
+        digs[index] = 0
+        
+print(digs)
+```
+
+### Замена кириллицы латиницей (учебный пример)
+```python
+t = ['a', 'b', 'v', 'g', 'd', 'e', 'zh', 'z', 'i', 'y', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'f', 'h', 'c', 'ch', 'sh', 'shch', '', 'y', '', 'e', 'yu', 'ya']
+
+start_index = ord('а')  # Значение кода для русской 'а' 1072
+title = "Программирование на Python - лучший курс"
+slug = ''  # Храним преобразование кириллицы в латиницу
+
+for s in title.lower():
+    if 'а' <= s <= 'я':
+        slug += t[ord(s) - start_index]  # t[1087 - 1072] = t[15] = p
+        # Разница между кодом текущей буквы и кодом "a" даёт позицию буквы в алфавите (начиная с 0)
+    elif s == 'ё':
+        slug += 'yo'
+    elif s in " !?;:.,":
+        slug += '-'
+    else:
+        slug += s
+        
+while slug.count('--'):
+    slug = slug.replace('--', '-')
+        
+print(slug)
+```
