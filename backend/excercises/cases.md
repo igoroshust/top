@@ -27,3 +27,42 @@ print("Периметр: ", 2 * (a + b))
 a, b, c = map(int, input('Введите стороны треугольника: ').split())  # ['123', '321', '333]
 print("Периметр: ", a + b + c)
 ```
+
+### Найти максимальное число (тернарный оператор)
+```python
+a = 2
+b = 3
+c = -4
+
+d = (a if a > c else c) if a > b else (b if b > c else c)
+print(d)
+```
+
+### Найти сумму (while)
+```python
+s = 0
+start = 1
+end = 5
+
+while start <= end:
+    s += start
+    start += 1
+    
+print(s)  # 15
+```
+
+### Найти чётное число в списке (while)
+```python
+d = [1, 5, 3, 61, -41, 22]
+
+flFind = False
+i = 0
+
+while i < len(d):
+    flFind = d[i] % 2 == 0
+    if flFind:
+        break
+    i += 1
+    
+print('есть' if flFind else 'нет')
+```

@@ -153,6 +153,25 @@ a = b
 ["Я", "люблю", "Python"] * 3  # ["Я", "люблю", "Python", "Я", "люблю", "Python", "Я", "люблю", "Python"]
 ```
 
+- `else в while`
+```python
+s = 0
+i = -10
+
+while i < 100:  # Оператор else пропускается
+    # while i < 0:  # else выводится
+    if i == 0:
+        break
+    s += 1/i
+    i += 1
+else:
+    print("Сумма вычислена корректно")
+    
+print(s)
+```
+![alt text](image-5.png)
+
+
 ## Математические операции
 
 ### Вычисление остатка от деления
@@ -421,3 +440,7 @@ dct = {'a': 1, 'b': 2}
 data.extend(dct)
 print(data)  # [10, 20, 'a', 'b']
 ```
+
+### Вложенные списки
+![alt text](image-3.png)
+![alt text](image-4.png)
