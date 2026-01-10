@@ -569,3 +569,122 @@ for line in read_large_file('large_file.txt'):
 - Память: оба ленивые, но генераторы часто эффективнее для генерации последовательностей.
 - Переиспользование: итераторы исчерпываются; генераторы можно перезапустить, вызвав функцию заново.
 
+### Вложенные списки
+**Примеры**
+1. Абстрактно
+```python
+for i in range(1, 4):
+    for j in range(1, 6):
+        print(f"i = {i}; j = {j}", end=' ')
+    print()  # перевод на новую строчку
+
+# i = 1; j = 1 i = 1; j = 2 i = 1; j = 3 i = 1; j = 4 i = 1; j = 5 
+# i = 2; j = 1 i = 2; j = 2 i = 2; j = 3 i = 2; j = 4 i = 2; j = 5 
+# i = 3; j = 1 i = 3; j = 2 i = 3; j = 3 i = 3; j = 4 i = 3; j = 5 
+```
+![alt text](image-6.png)
+
+2. Перебор вложенного списка
+```python
+a = [[i for i in range(1, 5)], [i for i in range(5, 10)], [i for i in range(10, 16)]]
+
+for row in a:
+    print(row, type(row))  # [1, 2, 3, 4] <class 'list'> (для первой итерации)
+    for x in row:
+        print(x, type(x), end=' ')  # 1 <class 'int'> 2 <class 'int'> 3 <class 'int'> 4 <class 'int'> 
+    print()
+```
+
+3. Суммирование элементов двух списков через цикл
+```python
+a = [[1, 2, 3, 4], [2, 2, 2, 2], [3, 3, 3, 3]]
+b = [[4, 4, 4, 4], [5, 5, 5, 5], [6, 6, 6, 6]]
+c = []
+
+for i, row in enumerate(a):
+    # i: 0
+    # row: [1, 1, 1, 1]
+    r = []
+    for j, x in enumerate(row):
+        # j = 0 ; x = 1
+        r.append (x + b[i][j])  # 1 + b[0][0]
+    c.append(r)
+    
+print(c)
+```
+
+2. Форматирование строк в списке (моё решение)
+```python
+t = [
+    'Lorem ipsum dolor sit       amet.',
+    'Lorem ipsum dolor sit amet.',
+    'Lorem ipsum dolor sit amet.',
+    'Lorem ips         um dolor sit amet.',
+    'Lorem ipsum dolor sit amet.',
+    'Lorem ipsum dolor sit amet.',
+    'Lorem ipsum         dolor sit amet.',
+    '            Lorem ipsum dolor sit amet.',
+]
+
+formatted_list = []
+
+for i, row in enumerate(t):
+    formatted_string = ''
+    for j, x in enumerate(row):
+        formatted_string += x
+    formatted_list.append(formatted_string.strip().replace('  ', ''))
+
+print(formatted_list)
+```
+
+2.1 Форматирование строк (решение учителя)
+```python
+t = [
+    'Lorem ipsum dolor sit       amet.',
+    'Lorem ipsum dolor sit amet.',
+    'Lorem ipsum dolor sit amet.',
+    'Lorem ips         um dolor sit amet.',
+    'Lorem ipsum dolor sit amet.',
+    'Lorem ipsum dolor sit amet.',
+    'Lorem ipsum         dolor sit amet.',
+    '            Lorem ipsum dolor sit amet.',
+]
+
+for i, line in enumerate(t):
+    while line.count('  '):
+        line = line.replace('  ', ' ')
+    t[i] = line.strip()  # strip добавил я
+    
+print(t)
+```
+
+3. Создать список из нулей (+ замена на единицы)
+```python
+M, N = list(map(int, input("Введите M и N: ").split()))
+zeros = []
+
+for i in range(M):
+    zeros.append([0] * N)
+    
+"""Заменяем значения на 1"""
+for i in range(M):
+    for j in range(N):
+        zeros[i][j] = 1
+        
+print(zeros)
+```
+
+4. Преобразование строк в столбы (транспонирование матрицы)
+```python
+A = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]]
+
+for i in range(len(A)):
+    for j in range(i+1, len(A)):
+        A[i][j], A[j][i] = A[j][i], A[i][j]
+        
+for r in A:
+    for x in r:
+        print(x, end='\t')
+    print()
+```
+![alt text](image-8.png)
