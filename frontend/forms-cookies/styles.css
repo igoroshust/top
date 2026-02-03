@@ -1,7 +1,6 @@
-.field {
-    display: flex;
-}
-
-input {
-    margin-left: 10px;
+.card {
+    width: 600px;
+    height: 300px;
+    border: 1px solid lightgrey;
+    border-radius: 20px;
 }
