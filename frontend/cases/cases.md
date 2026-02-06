@@ -384,3 +384,13 @@ Array.from({ length: 5 }, (_, i) => i ** 2); // [0, 1, 4, 9, 16]
 ```javascript
 Array.from({ length: 3 }, () => 'x'); // ['x', 'x', 'x']
 ```
+
+
+### Дана некоторая строка. Переберите и выведите в консоль по очереди все символы с конца строки.
+```javascript
+let string = 'igoroshust';
+
+for (let i = string.length - 1; i >= 0; i--) {
+    console.log(string[i])
+}
+```
