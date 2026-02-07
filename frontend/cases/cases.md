@@ -394,3 +394,151 @@ for (let i = string.length - 1; i >= 0; i--) {
     console.log(string[i])
 }
 ```
+
+### Найти сумму квадратов элементов массива
+**Моё решение**
+```javascript
+const numbers = [1, 2, 3, 4];
+let count = 0;
+
+numbers.forEach(number => count += number**2);
+
+console.log(count);
+```
+
+**Через reduce**
+```javascript
+const numbers = [1, 2, 3, 4];
+const sum = numbers.reduce((acc, num) => acc + num**2, 0); // 30
+```
+
+
+**Через for**
+```javascript
+const numbers = [1, 2, 3, 4];
+let count = 0;
+
+for (let i = 0; i < numbers.length; i++) {
+    count += numbers[i]**2;
+}
+
+console.log(count);
+```
+
+**С использованием `Math.pow`**
+```javascript
+numbers.forEach(number => count += Math.pow(number, 2));
+```
+
+### Найти сумму квадратных корней массива
+```javascript
+const numbers = [1, 2, 3, 4];
+let count = 0;
+
+// forEach
+// numbers.forEach(number => count += Math.sqrt(number));
+// console.log(count);
+
+// reduce
+// let sum = numbers.reduce((acc, number) => acc + Math.sqrt(number), 0);
+// console.log(sum);
+
+// for
+// for (let i = 0; i < numbers.length; i++) {
+//     count += Math.sqrt(numbers[i]);
+// }
+// console.log(count);
+```
+
+### Найти сумму положительных элементов массива
+```javascript
+const numbers = [1, -2, 3, -4];
+let count = 0;
+
+// forEach
+numbers.forEach(number => {
+   if (number >= 0) count += number
+});
+console.log('count (foreach) :>> ', count);
+
+// reduce
+let sum = numbers.reduce((acc, num) => {
+  if (num >= 0) acc += num;
+  return acc;
+}, 0);
+console.log("sum :>> ", sum);
+
+// reduce c тернарником
+const sum = numbers.reduce((acc, num) => num >= 0 ? acc + num : acc, 0);
+console.log('sum :>> ', sum);
+
+// for
+for (let i = 0; i < numbers.length; i++) {
+    if (numbers[i] >= 0) count += numbers[i]
+}
+console.log('count (for) :>> ', count);
+```
+
+### Найти сумму всех элементов больше 0 и меньше 10
+```javascript
+const numbers = [1, -2, 3, -4, 20, 30, 10, 9];
+let count = 0;
+
+// forEach
+numbers.forEach(number => (number > 0 && number < 10) ? count += number : count);
+console.log('count :>> ', count);
+
+// reduce
+const sum = numbers.reduce((acc, num) => (num > 0 && num < 10) ? acc + num : acc, 0);
+console.log('sum :>> ', sum);
+
+// for
+count = 0;
+for (let i = 0; i < numbers.length; i++) {
+    if (numbers[i] > 0 && numbers[i] < 10) count += numbers[i];
+}
+console.log('count :>> ', count);
+```
+
+### Создать массив с элементами строки
+```javascript
+let str = 'abcde';
+
+// split('')
+const arrSplit = str.split('');
+console.log(arrSplit); // Разбивает строку по каждому символу
+
+// spread
+const arrSpread = [...str];
+console.log(arrSpread); // Разворачивает строку в массив символов
+
+// Array.from()
+const arrArrayFrom = Array.from(str);
+console.log(arrArrayFrom); // Создаёт массив из итерируемого объекта (строка - итерируема)
+
+// Object.keys() + map()
+const arrObject = Object.keys(str).map(key => str[key]);
+console.log(arrObject); // Object.keys(str) даёт индексы ['0', '1', ...], map преобразует индексы в символы по этим индексам
+```
+
+### Дано число, получить массив цифр числа
+```javascript
+const num = 12345;
+
+// split + map
+const numSplit = String(num).split('').map(Number);
+// console.log(numSplit);
+
+// spread
+const numSpread = [...String(num)].map(Number);
+// console.log(numSpread);
+
+// Array.from
+const numArray = Array.from(String(num), Number);
+// console.log(numArray);
+
+// Object.keys()
+const str = String(num);
+const digits = Object.keys(str).map(key => +str[key]);
+console.log(digits);
+```
