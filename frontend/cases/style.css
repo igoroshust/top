@@ -1,0 +1,27 @@
+.heading-one {
+    border: 2px solid red;
+    color:aquamarine;
+}
+
+.strike {
+    text-decoration: line-through;
+}
+
+.none {
+    display: none !important;
+}
+
+.section-posts {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+.section-posts__post {
+    width: 500px;
+    border: 2px outset orange;
+    border-radius: 10px;
+    padding: 20px;
+}

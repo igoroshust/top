@@ -1,15 +1,67 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
     <script src="/scripts.js" defer></script>
 
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
+    <section class="section section-one" style="display: none">
+      <h2>Hello</h2>
+      <h2 class="heading-one" style="color: aliceblue">Hello-1</h2>
+      <h2>Hello-2</h2>
+      <div class="wrapper">
+        <h4 class="section-one__title">Заголовок 1</h4>
+        <div class="section-one__content">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem non
+          corporis ea enim neque cum provident praesentium eos accusantium
+          veniam, necessitatibus dolores voluptatum? Repellendus culpa tempora,
+          voluptates neque natus excepturi.
+        </div>
+        <img src="./images/image.png" id="section-one__image" alt="" />
+        <button class="section-one__button" value="buttonValue">Удалить</button>
+      </div>
+    </section>
 
-    <h2>Hello</h2>
-    
-</body>
+    <section class="section section-list none">
+      <h4 class="section-list__title">Список задач</h4>
+      <ul class="section-list__list">
+        <li class="section-list__item item-1">Посмотреть кино</li>
+        <li class="section-list__item item-2">Сходить в магазин</li>
+        <li class="section-list__item item-3">Открыть окно</li>
+      </ul>
+      <button class="section-list__button">Добавить</button>
+      <br /><br />
+
+      <form action="" id="section-list__form" class="none">
+        <input type="text" class="section-list__form-input" />
+        <button class="section-list__form-button">Отправить</button>
+      </form>
+    </section>
+
+    <section class="section section-timer none">
+      <div class="section-timer__value">0</div>
+      <button class="section-timer__button section-timer__button--start">
+        Старт
+      </button>
+      <button class="section-timer__button section-timer__button--stop">
+        Стоп
+      </button>
+      <button class="section-timer__button section-timer__button--reset">
+        Сброс
+      </button>
+    </section>
+
+    <section class="section section-posts">
+      <!--
+      <div class="section-posts__post">
+       <div class="section-posts__title"></div>
+        <div class="section-posts__body"></div>
+        <div class="section-posts__author"></div> -->
+      </div>
+    </section>
+  </body>
 </html>
