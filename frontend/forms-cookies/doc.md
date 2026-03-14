@@ -818,12 +818,6 @@ function deleteAllCookies() {
 // deleteAllCookies();
 ```
 
-3.4 Улучшенная версия удаления Cookies
-```javascript
-
-
-```
-
 4. Установка cookie с дополнительными атрибутами
    Добавляем атрибуты для безопасности: `secure` (только HTTPS), `samesite=strict` (Защита от CSRF).
 
