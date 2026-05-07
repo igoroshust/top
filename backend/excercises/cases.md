@@ -66,3 +66,91 @@ while i < len(d):
     
 print('есть' if flFind else 'нет')
 ```
+
+
+# Проверить чётность числа
+Моё решение
+```python
+num = 40
+
+def isNegative(number): 
+    return 'Positive' if number > 0 else ('Zero' if number == 0 else 'Negative')
+
+print(
+    isNegative(-10)
+)
+```
+
+if-elif-else
+```python
+def isNegative(number):
+    if number < 0:
+        return 'Negative'
+    elif number == 0:
+        return 'Zero'
+    else:
+        return 'Positive'
+
+print(isNegative(-10))
+```
+
+lambda
+```python
+def isNegative(number):
+    conditions = [lambda x: x < 0, lambda x: x == 0, lambda x: x > 0]
+    results = ['Negative', 'Zero', 'Positive']
+    for i, cond in enumerate(conditions):
+        if cond(number):
+            return results[i]
+
+print(isNegative(-10))
+```
+
+Словарь
+```python
+def isNegative(number):
+    signs = {True: 'Negative', False: 'Positive'}
+    return signs[number < 0] if number != 0 else 'Zero'
+
+print(isNegative(-10))
+```
+
+startswith
+```python
+def isNegative(number):
+    return 'Negative' if str(number).startswith('-') else ('Zero' if number == 0 else 'Positive')
+
+print(isNegative(-10))  # Negative
+```
+
+
+operator.lt
+```python
+from operator import lt, eq
+
+def isNegative(number):
+    return ('Negative' if lt(number, 0) else 
+            'Zero' if eq(number, 0) else
+            'Positive')
+
+print(isNegative(-10))
+```
+
+math.sign
+```python
+import math
+
+def isNegative(number): 
+    sign = math.sign(number)
+    if sign > 0: return 'Positive'
+    elif sign == 0: return 'Zero'
+    else: return 'Negative'
+
+print(isNegative(-10))  # Negative
+
+`math.sign` возвращает знак числа, как float: 
+print(math.sign(10))  # 1.0
+print(math.sign(0))  # 0.0
+print(math.sign(-10))  # -1.0
+print(math.sign(-0.0))  # -0.0
+```
