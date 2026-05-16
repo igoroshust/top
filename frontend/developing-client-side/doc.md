@@ -1,4 +1,10 @@
 Темы для разбора:
+- CDATA (CDATASection)
+- ProgressiveInstruction
+- EntityReference
+- Замыкания
+- Каррирование
+
 - Тег map, area (HTML)
 - Объект Event
 - Фазы распространения события (event propagation)

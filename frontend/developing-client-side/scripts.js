@@ -1,16 +1,11 @@
-const div = document.querySelector('.test');
+function createToggle(element, attribute, value1, value2) {
+    return function () {
+        const current = element.getAttribute(attribute);
+        const newValue = current === value1 ? value2 : value1;
+        element.setAttribute(attribute, newValue);
+    }
+}
 
-// Создаём диапазон
-const range = document.createRange();
-const selection = window.getSelection();
+const img = document.getElementById('myImage');
 
-// Находим текстовый узел внутри div (обычно firstChild)
-const textNode = div.firstChild;
-
-// Устанавливаем границы выделения
-range.setStart(textNode, 0); // Начало: позиция 0
-range.setEnd(textNode, textNode.length-6); // Конец: длина текста
-
-// Применяем выделение
-selection.removeAllRanges();
-selection.addRange(range);
+document.getElementById('changeBtn').addEventListener('click', createToggle(img, 'src', '/developing-client-side/image-1.png', '/developing-client-side/image-2.png'))
